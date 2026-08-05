@@ -37,6 +37,3446 @@ body{
     padding:20px;
     text-align:center;
     box-shadow:0 0 20px #000;
+    position:relative;
+    overflow:hidden;
+}
+
+h1{
+    margin-bottom:15px;
+}
+
+.info{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:18px;
+}
+
+#coin{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    cursor:pointer;
+    transition:.1s;
+    user-select:none;
+    object-fit:cover;
+    display:block;
+    margin:15px auto;
+    position:relative;
+    z-index:2;
+}
+
+#coin:active{
+    transform:scale(.90);
+}
+
+#energyBar{
+    width:100%;
+    height:18px;
+    background:#555;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:12px;
+    margin-bottom:12px;
+}
+
+#energyFill{
+    width:100%;
+    height:100%;
+    background:lime;
+    transition:.2s;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    background:#ff9800;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.15s;
+}
+
+button:hover{
+    background:#ffb300;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+#shop{
+    margin-top:20px;
+}
+
+.panel{
+    margin-top:20px;
+    padding:12px;
+    background:#2d2d2d;
+    border-radius:12px;
+    line-height:32px;
+}
+
+.levelBox{
+    background:#333;
+}
+
+.achievementBox{
+    background:#2b2b2b;
+}
+
+.rankBox{
+    background:#333;
+}
+
+.small{
+    font-size:14px;
+    opacity:.7;
+}
+
+.upgrade-detail{
+    font-size:13px;
+    color:#ffe0b2;
+    margin-top:2px;
+}
+
+/* ==================================================
+   BETA TAG
+================================================== */
+
+.beta-tag{
+    display:inline-block;
+    font-size:10px;
+    line-height:16px;
+    padding:0 7px;
+    margin-right:6px;
+    border-radius:20px;
+    background:linear-gradient(135deg,#7c4dff,#00e5ff);
+    color:white;
+    font-weight:bold;
+    vertical-align:middle;
+    box-shadow:0 0 10px rgba(0,229,255,.35);
+}
+
+/* ==================================================
+   کلیک معمولی
+================================================== */
+
+.flying-coin{
+    position:absolute;
+    pointer-events:none;
+    font-size:22px;
+    font-weight:bold;
+    color:#ffd700;
+    text-shadow:0 0 10px rgba(0,0,0,.8);
+    z-index:9999;
+    animation:floatUp .8s ease-out forwards;
+    user-select:none;
+}
+
+@keyframes floatUp{
+    0%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(.8) rotate(0deg);
+    }
+
+    50%{
+        transform:
+        translate(
+            calc(-50% + var(--dx)),
+            calc(-50% - 60px)
+        )
+        scale(1.3)
+        rotate(15deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+        translate(
+            calc(-50% + var(--dx)),
+            calc(-50% - 120px)
+        )
+        scale(1)
+        rotate(30deg);
+    }
+}
+
+/* ==================================================
+   افکت کلیک طلایی
+================================================== */
+
+.golden-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:8000;
+    opacity:0;
+}
+
+.golden-overlay.active{
+    animation:goldenFlash .9s ease-out forwards;
+}
+
+@keyframes goldenFlash{
+    0%{
+        opacity:0;
+        background:rgba(255,215,0,0);
+    }
+
+    15%{
+        opacity:1;
+        background:rgba(255,215,0,.28);
+    }
+
+    35%{
+        opacity:.65;
+        background:rgba(255,190,0,.16);
+    }
+
+    100%{
+        opacity:0;
+        background:rgba(255,215,0,0);
+    }
+}
+
+.golden-title{
+    position:absolute;
+    left:50%;
+    top:38%;
+    transform:translate(-50%,-50%) scale(.2) rotate(-8deg);
+    white-space:nowrap;
+    font-size:30px;
+    font-weight:900;
+    color:#fff;
+    text-shadow:
+        0 0 5px #fff,
+        0 0 12px #ffd700,
+        0 0 25px #ff9800,
+        0 4px 8px #000;
+    z-index:9000;
+    pointer-events:none;
+    opacity:0;
+}
+
+.golden-title.active{
+    animation:goldenTitle .95s cubic-bezier(.17,.89,.32,1.28) forwards;
+}
+
+@keyframes goldenTitle{
+    0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.2) rotate(-10deg);
+    }
+
+    25%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.25) rotate(4deg);
+    }
+
+    50%{
+        transform:translate(-50%,-55%) scale(1) rotate(-2deg);
+    }
+
+    75%{
+        opacity:1;
+        transform:translate(-50%,-70%) scale(1.05);
+    }
+
+    100%{
+        opacity:0;
+        transform:translate(-50%,-120%) scale(.8);
+    }
+}
+
+.golden-ring{
+    position:absolute;
+    left:50%;
+    top:42%;
+    width:60px;
+    height:60px;
+    border:4px solid #ffd700;
+    border-radius:50%;
+    transform:translate(-50%,-50%) scale(.1);
+    opacity:0;
+    z-index:8500;
+    pointer-events:none;
+    box-shadow:
+        0 0 15px #ffd700,
+        0 0 30px #ff9800;
+}
+
+.golden-ring.active{
+    animation:goldenRing .8s ease-out forwards;
+}
+
+@keyframes goldenRing{
+    0%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(.1);
+    }
+
+    100%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(4);
+    }
+}
+
+.golden-particle{
+    position:absolute;
+    left:50%;
+    top:42%;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#ffd700;
+    box-shadow:
+        0 0 8px #fff,
+        0 0 16px #ff9800;
+    z-index:8700;
+    pointer-events:none;
+    animation:particleFly .9s ease-out forwards;
+}
+
+@keyframes particleFly{
+    0%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+        translate(
+            calc(-50% + var(--px)),
+            calc(-50% + var(--py))
+        )
+        scale(.2);
+    }
+}
+
+.golden-coin{
+    position:absolute;
+    left:50%;
+    top:42%;
+    font-size:45px;
+    z-index:8800;
+    pointer-events:none;
+    filter:
+        drop-shadow(0 0 5px #fff)
+        drop-shadow(0 0 15px #ffd700)
+        drop-shadow(0 0 30px #ff9800);
+    animation:goldenCoin .9s ease-out forwards;
+}
+
+@keyframes goldenCoin{
+    0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.2) rotate(-90deg);
+    }
+
+    20%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.3) rotate(20deg);
+    }
+
+    55%{
+        transform:translate(-50%,-70%) scale(1) rotate(180deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:translate(-50%,-140%) scale(.7) rotate(360deg);
+    }
+}
+
+.golden-shake{
+    animation:goldenShake .35s ease-in-out;
+}
+
+@keyframes goldenShake{
+    0%{transform:scale(1) rotate(0deg);}
+    20%{transform:scale(1.05) rotate(-2deg);}
+    40%{transform:scale(1.1) rotate(2deg);}
+    60%{transform:scale(1.08) rotate(-2deg);}
+    80%{transform:scale(1.04) rotate(1deg);}
+    100%{transform:scale(1) rotate(0deg);}
+}
+
+/* ==================================================
+   پیام خطا
+================================================== */
+
+#toastError{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background-color:#e74c3c;
+    color:white;
+    padding:10px 20px;
+    border-radius:10px;
+    font-weight:bold;
+    font-size:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,.5);
+    display:none;
+    z-index:10000;
+    animation:fadeIn .3s;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translate(-50%,-10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translate(-50%,0);
+    }
+}
+
+/* ==================================================
+   پنل آپدیت
+================================================== */
+
+#updateModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:20000;
+}
+
+#updateModal.show{
+    display:flex;
+}
+
+.update-card{
+    width:390px;
+    max-width:100%;
+    background:
+        radial-gradient(circle at top right,rgba(0,229,255,.18),transparent 35%),
+        radial-gradient(circle at bottom left,rgba(124,77,255,.2),transparent 40%),
+        #17172a;
+    border:1px solid rgba(0,229,255,.45);
+    border-radius:24px;
+    padding:25px;
+    text-align:center;
+    box-shadow:
+        0 0 25px rgba(0,229,255,.2),
+        0 0 70px rgba(124,77,255,.15);
+    animation:updatePop .45s cubic-bezier(.17,.89,.32,1.28);
+}
+
+@keyframes updatePop{
+    from{
+        opacity:0;
+        transform:scale(.75) translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+.update-icon{
+    width:75px;
+    height:75px;
+    margin:0 auto 15px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    background:linear-gradient(135deg,#00e5ff,#7c4dff);
+    box-shadow:
+        0 0 20px rgba(0,229,255,.35),
+        0 0 40px rgba(124,77,255,.25);
+}
+
+.update-badge{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:20px;
+    background:rgba(0,229,255,.12);
+    border:1px solid rgba(0,229,255,.35);
+    color:#62eeff;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.update-card h2{
+    font-size:26px;
+    margin-bottom:4px;
+}
+
+.update-name{
+    color:#ffd740;
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+    text-shadow:0 0 12px rgba(255,215,64,.4);
+}
+
+.update-card p{
+    line-height:28px;
+    color:#ddd;
+    font-size:14px;
+}
+
+.update-feature{
+    margin-top:15px;
+    background:rgba(255,255,255,.06);
+    border-radius:15px;
+    padding:12px;
+    text-align:right;
+    line-height:27px;
+}
+
+.update-feature div{
+    margin-bottom:3px;
+}
+
+.update-fix{
+    margin-top:12px;
+    color:#7CFFB2;
+    font-size:13px;
+}
+
+#closeUpdate{
+    margin-top:18px;
+    background:linear-gradient(135deg,#00bcd4,#7c4dff);
+    box-shadow:0 0 20px rgba(0,229,255,.2);
+}
+
+#closeUpdate:hover{
+    background:linear-gradient(135deg,#26d9f0,#9575ff);
+}
+
+/* ==================================================
+   ناحیه آمار طلایی
+================================================== */
+
+.golden-stat{
+    color:#ffd700;
+    text-shadow:0 0 8px rgba(255,215,0,.35);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="toastError">⚠️ سکه کافی نداری!</div>
+
+<!-- ==================================================
+     پنل آپدیت
+================================================== -->
+
+<div id="updateModal">
+
+    <div class="update-card">
+
+        <div class="update-icon">✨</div>
+
+        <div class="update-badge">UPDATE</div>
+
+        <h2>بروزرسانی</h2>
+
+        <div class="update-name">🟡 کلیک طلایی</div>
+
+        <p>
+            یک قابلیت جدید و هیجان‌انگیز به بازی اضافه شد!
+            از این به بعد ممکنه هر کلیک شما تبدیل به
+            <b>کلیک طلایی</b> بشه و چند برابر سکه دریافت کنید.
+        </p>
+
+        <div class="update-feature">
+
+            <div>🍀 ارتقای شانس ظهور کلیک طلایی</div>
+
+            <div>💥 ارتقای ضریب جایزه کلیک طلایی</div>
+
+            <div>✨ افکت ویژه برای کلیک طلایی</div>
+
+        </div>
+
+        <div class="update-fix">
+            🐛 فیکس شدن باگ جزئی
+        </div>
+
+        <button id="closeUpdate">
+            🚀 بزن بریم!
+        </button>
+
+    </div>
+
+</div>
+
+<div id="game">
+
+    <h1>انگشتش کن!</h1>
+
+    <div class="info">
+
+        <div>
+            🪙 <span id="coins">0</span>
+        </div>
+
+        <div>
+            ⭐سطح: <span id="stage">1</span>
+        </div>
+
+    </div>
+
+    <div class="info">
+
+        <div>
+            ⚡ <span id="energyText">100</span>
+            /
+            <span id="maxEnergyText">100</span>
+        </div>
+
+        <div>
+            💥قدرت کلیک: <span id="power">1</span>
+        </div>
+
+    </div>
+
+    <div id="energyBar">
+        <div id="energyFill"></div>
+    </div>
+
+    <img id="coin" src="img1.jpg" alt="Coin">
+
+    <div id="goldenOverlay" class="golden-overlay"></div>
+
+    <div id="goldenRing" class="golden-ring"></div>
+
+    <div id="goldenTitle" class="golden-title">
+        ✨ GOLDEN CLICK! ✨
+    </div>
+
+    <div id="shop">
+
+        <button id="upgradePower">
+
+            ⬆ افزایش سکه هر کلیک
+
+            <div
+                class="upgrade-detail"
+                id="powerDetail"
+            >
+                قدرت: 1 ➔ 2
+            </div>
+
+            <span id="powerPrice">20</span>
+            سکه
+
+        </button>
+
+        <button id="upgradeEnergy">
+
+            🔋 افزایش ظرفیت انرژی
+
+            <div
+                class="upgrade-detail"
+                id="energyDetail"
+            >
+                ظرفیت: 100 ➔ 120
+            </div>
+
+            <span id="energyPrice">40</span>
+            سکه
+
+        </button>
+
+        <button id="upgradeRegen">
+
+            ⚡ افزایش سرعت بازیابی انرژی
+
+            <div
+                class="upgrade-detail"
+                id="regenDetail"
+            >
+                سرعت: 1/s ➔ 1.5/s
+            </div>
+
+            <span id="regenPrice">60</span>
+            سکه
+
+        </button>
+
+        <!-- ==================================================
+             ارتقاهای طلایی
+        ================================================== -->
+
+        <button id="upgradeGoldenChance">
+
+            🍀 افزایش شانس کلیک طلایی
+
+            <span class="beta-tag">BETA</span>
+
+            <div
+                class="upgrade-detail"
+                id="goldenChanceDetail"
+            >
+                شانس: 1% ➔ 2%
+            </div>
+
+            <span id="goldenChancePrice">100</span>
+            سکه
+
+        </button>
+
+        <button id="upgradeGoldenMultiplier">
+
+            💥 افزایش ضریب کلیک طلایی
+
+            <span class="beta-tag">BETA</span>
+
+            <div
+                class="upgrade-detail"
+                id="goldenMultiplierDetail"
+            >
+                ضریب: ×2 ➔ ×3
+            </div>
+
+            <span id="goldenMultiplierPrice">250</span>
+            سکه
+
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ==================================================
+   متغیرهای اصلی
+================================================== */
+
+let coins = 0;
+
+let stage = 1;
+
+let power = 1;
+
+let energy = 100;
+
+let maxEnergy = 100;
+
+let regen = 1;
+
+
+/* ==================================================
+   قیمت ارتقاهای معمولی
+================================================== */
+
+let powerPrice = 20;
+
+let energyPrice = 40;
+
+let regenPrice = 60;
+
+
+/* ==================================================
+   سطح ارتقاهای معمولی
+================================================== */
+
+let powerLevel = 1;
+
+let energyLevel = 1;
+
+let regenLevel = 1;
+
+
+/* ==================================================
+   سیستم کلیک طلایی
+================================================== */
+
+let goldenChance = 1;
+
+let goldenMultiplier = 2;
+
+let goldenChanceLevel = 1;
+
+let goldenMultiplierLevel = 1;
+
+let goldenChancePrice = 100;
+
+let goldenMultiplierPrice = 250;
+
+let totalGoldenClicks = 0;
+
+let totalGoldenCoins = 0;
+
+
+/* ==================================================
+   آمار
+================================================== */
+
+let totalClicks = 0;
+
+let totalCoinsEarned = 0;
+
+let gameStart = Date.now();
+
+
+/* ==================================================
+   خرید چندتایی
+================================================== */
+
+let buyAmount = 1;
+
+
+/* ==================================================
+   دستاوردها
+================================================== */
+
+let achievements = {
+
+    firstClick:false,
+
+    coin50:false,
+
+    coin300:false,
+
+    coin1000:false,
+
+    coin5500:false,
+
+    power10:false
+
+};
+
+let showAchievementAlerts = true;
+
+
+/* ==================================================
+   رتبه
+================================================== */
+
+let rank = "حروم لقمه";
+
+
+/* ==================================================
+   عناصر HTML
+================================================== */
+
+const coin =
+    document.getElementById("coin");
+
+const coinsText =
+    document.getElementById("coins");
+
+const stageText =
+    document.getElementById("stage");
+
+const energyText =
+    document.getElementById("energyText");
+
+const maxEnergyText =
+    document.getElementById("maxEnergyText");
+
+const energyFill =
+    document.getElementById("energyFill");
+
+const powerText =
+    document.getElementById("power");
+
+
+const powerPriceText =
+    document.getElementById("powerPrice");
+
+const energyPriceText =
+    document.getElementById("energyPrice");
+
+const regenPriceText =
+    document.getElementById("regenPrice");
+
+
+const powerDetail =
+    document.getElementById("powerDetail");
+
+const energyDetail =
+    document.getElementById("energyDetail");
+
+const regenDetail =
+    document.getElementById("regenDetail");
+
+
+const goldenChancePriceText =
+    document.getElementById("goldenChancePrice");
+
+const goldenMultiplierPriceText =
+    document.getElementById("goldenMultiplierPrice");
+
+
+const goldenChanceDetail =
+    document.getElementById("goldenChanceDetail");
+
+const goldenMultiplierDetail =
+    document.getElementById("goldenMultiplierDetail");
+
+
+const toastError =
+    document.getElementById("toastError");
+
+
+const goldenOverlay =
+    document.getElementById("goldenOverlay");
+
+const goldenTitle =
+    document.getElementById("goldenTitle");
+
+const goldenRing =
+    document.getElementById("goldenRing");
+
+
+/* ==================================================
+   محاسبه هزینه ارتقا
+================================================== */
+
+function calculateUpgradeStats(type){
+
+    let cost = 0;
+
+    let tempPrice;
+
+    let tempVal;
+
+
+    if(type === "power"){
+
+        tempPrice = powerPrice;
+
+        tempVal = power;
+
+    }
+
+    else if(type === "energy"){
+
+        tempPrice = energyPrice;
+
+        tempVal = maxEnergy;
+
+    }
+
+    else if(type === "regen"){
+
+        tempPrice = regenPrice;
+
+        tempVal = regen;
+
+    }
+
+    else if(type === "goldenChance"){
+
+        tempPrice = goldenChancePrice;
+
+        tempVal = goldenChance;
+
+    }
+
+    else if(type === "goldenMultiplier"){
+
+        tempPrice = goldenMultiplierPrice;
+
+        tempVal = goldenMultiplier;
+
+    }
+
+
+    for(let i = 0; i < buyAmount; i++){
+
+        cost += tempPrice;
+
+
+        if(type === "power"){
+
+            tempVal += 1;
+
+            tempPrice =
+                Math.floor(tempPrice * 1.7);
+
+        }
+
+        else if(type === "energy"){
+
+            tempVal += 20;
+
+            tempPrice =
+                Math.floor(tempPrice * 1.8);
+
+        }
+
+        else if(type === "regen"){
+
+            tempVal += .5;
+
+            tempPrice =
+                Math.floor(tempPrice * 2);
+
+        }
+
+        else if(type === "goldenChance"){
+
+            tempVal += 1;
+
+            tempPrice =
+                Math.floor(tempPrice * 2.1);
+
+        }
+
+        else if(type === "goldenMultiplier"){
+
+            tempVal += 1;
+
+            tempPrice =
+                Math.floor(tempPrice * 2.4);
+
+        }
+
+    }
+
+
+    return {
+        totalCost:cost,
+        nextVal:tempVal
+    };
+
+}
+
+
+/* ==================================================
+   آپدیت رابط کاربری
+================================================== */
+
+function updateUI(){
+
+    coinsText.innerText =
+        Math.floor(coins);
+
+
+    stageText.innerText =
+        stage;
+
+
+    energyText.innerText =
+        Math.floor(energy);
+
+
+    maxEnergyText.innerText =
+        maxEnergy;
+
+
+    powerText.innerText =
+        power;
+
+
+    /* ارتقای قدرت */
+
+    const pStats =
+        calculateUpgradeStats("power");
+
+    powerPriceText.innerText =
+        pStats.totalCost;
+
+    powerDetail.innerText =
+        `قدرت: ${power} ➔ ${pStats.nextVal}`;
+
+
+    /* ارتقای انرژی */
+
+    const eStats =
+        calculateUpgradeStats("energy");
+
+    energyPriceText.innerText =
+        eStats.totalCost;
+
+    energyDetail.innerText =
+        `ظرفیت: ${maxEnergy} ➔ ${eStats.nextVal}`;
+
+
+    /* ارتقای بازیابی */
+
+    const rStats =
+        calculateUpgradeStats("regen");
+
+    regenPriceText.innerText =
+        rStats.totalCost;
+
+    regenDetail.innerText =
+        `سرعت: ${regen}/s ➔ ${rStats.nextVal}/s`;
+
+
+    /* شانس طلایی */
+
+    const gChanceStats =
+        calculateUpgradeStats("goldenChance");
+
+    goldenChancePriceText.innerText =
+        gChanceStats.totalCost;
+
+    goldenChanceDetail.innerText =
+        `شانس: ${goldenChance}% ➔ ${gChanceStats.nextVal}%`;
+
+
+    /* ضریب طلایی */
+
+    const gMultiplierStats =
+        calculateUpgradeStats("goldenMultiplier");
+
+    goldenMultiplierPriceText.innerText =
+        gMultiplierStats.totalCost;
+
+    goldenMultiplierDetail.innerText =
+        `ضریب: ×${goldenMultiplier} ➔ ×${gMultiplierStats.nextVal}`;
+
+
+    /* انرژی */
+
+    let energyPercent =
+        (energy / maxEnergy) * 100;
+
+    energyFill.style.width =
+        energyPercent + "%";
+
+}
+
+
+/* ==================================================
+   پیام خطا
+================================================== */
+
+let errorTimeout;
+
+
+function showError(msg){
+
+    toastError.innerText =
+        msg;
+
+    toastError.style.display =
+        "block";
+
+    clearTimeout(errorTimeout);
+
+    errorTimeout =
+        setTimeout(() => {
+
+            toastError.style.display =
+                "none";
+
+        },2000);
+
+}
+
+
+/* ==================================================
+   تغییر عکس سکه
+================================================== */
+
+function checkStage(){
+
+    if(coins >= 15000){
+
+        stage = 6;
+
+        coin.src = "nezam.jpg";
+
+    }
+
+    else if(coins >= 5500){
+
+        stage = 5;
+
+        coin.src = "gh.jpg";
+
+    }
+
+    else if(coins >= 1000){
+
+        stage = 4;
+
+        coin.src = "sfr.jpg";
+
+    }
+
+    else if(coins >= 300){
+
+        stage = 3;
+
+        coin.src = "ghafar.jpg";
+
+    }
+
+    else if(coins >= 50){
+
+        stage = 2;
+
+        coin.src = "est.jpg";
+
+    }
+
+    else{
+
+        stage = 1;
+
+        coin.src = "ghane.jpg";
+
+    }
+
+}
+
+
+/* ==================================================
+   صدای کلیک معمولی
+================================================== */
+
+function playClick(){
+
+    try{
+
+        const ctx =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+
+        const osc =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+
+        osc.type =
+            "triangle";
+
+        osc.frequency.value =
+            700;
+
+        gain.gain.value =
+            .04;
+
+
+        osc.connect(gain);
+
+        gain.connect(ctx.destination);
+
+        osc.start();
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,
+            ctx.currentTime + .08
+        );
+
+
+        osc.stop(
+            ctx.currentTime + .08
+        );
+
+    }
+
+    catch(e){
+
+        console.log(
+            "Audio error:",
+            e
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   صدای کلیک طلایی
+================================================== */
+
+function playGoldenSound(){
+
+    try{
+
+        const ctx =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+
+
+        const osc1 =
+            ctx.createOscillator();
+
+        const osc2 =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+
+        osc1.type =
+            "sine";
+
+        osc2.type =
+            "triangle";
+
+
+        osc1.frequency.setValueAtTime(
+            600,
+            ctx.currentTime
+        );
+
+        osc1.frequency.exponentialRampToValueAtTime(
+            1200,
+            ctx.currentTime + .12
+        );
+
+
+        osc2.frequency.setValueAtTime(
+            900,
+            ctx.currentTime
+        );
+
+        osc2.frequency.exponentialRampToValueAtTime(
+            1800,
+            ctx.currentTime + .2
+        );
+
+
+        gain.gain.setValueAtTime(
+            .08,
+            ctx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,
+            ctx.currentTime + .45
+        );
+
+
+        osc1.connect(gain);
+
+        osc2.connect(gain);
+
+        gain.connect(ctx.destination);
+
+
+        osc1.start();
+
+        osc2.start();
+
+
+        osc1.stop(
+            ctx.currentTime + .45
+        );
+
+        osc2.stop(
+            ctx.currentTime + .45
+        );
+
+    }
+
+    catch(e){
+
+        console.log(
+            "Golden audio error:",
+            e
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   افکت معمولی پرتاب سکه
+================================================== */
+
+function spawnFlyingCoin(e){
+
+    const coinElem =
+        document.createElement("div");
+
+    coinElem.className =
+        "flying-coin";
+
+
+    coinElem.innerHTML =
+        `🪙 +${power}`;
+
+
+    const rect =
+        coin.getBoundingClientRect();
+
+
+    const gameRect =
+        document
+        .getElementById("game")
+        .getBoundingClientRect();
+
+
+    let clickX =
+        (e.clientX ||
+        (rect.left + rect.width / 2))
+        - gameRect.left;
+
+
+    let clickY =
+        (e.clientY ||
+        (rect.top + rect.height / 2))
+        - gameRect.top;
+
+
+    coinElem.style.left =
+        clickX + "px";
+
+
+    coinElem.style.top =
+        clickY + "px";
+
+
+    let randomDx =
+        (Math.random() - .5) * 60;
+
+
+    coinElem.style.setProperty(
+        "--dx",
+        `${randomDx}px`
+    );
+
+
+    document
+        .getElementById("game")
+        .appendChild(coinElem);
+
+
+    setTimeout(() => {
+
+        coinElem.remove();
+
+    },800);
+
+}
+
+
+/* ==================================================
+   افکت کلیک طلایی
+================================================== */
+
+function createGoldenParticles(){
+
+    const game =
+        document.getElementById("game");
+
+
+    for(let i = 0; i < 28; i++){
+
+        const particle =
+            document.createElement("div");
+
+        particle.className =
+            "golden-particle";
+
+
+        const angle =
+            Math.random() * Math.PI * 2;
+
+
+        const distance =
+            80 + Math.random() * 150;
+
+
+        const px =
+            Math.cos(angle) * distance;
+
+
+        const py =
+            Math.sin(angle) * distance;
+
+
+        particle.style.setProperty(
+            "--px",
+            `${px}px`
+        );
+
+
+        particle.style.setProperty(
+            "--py",
+            `${py}px`
+        );
+
+
+        game.appendChild(particle);
+
+
+        setTimeout(() => {
+
+            particle.remove();
+
+        },900);
+
+    }
+
+}
+
+
+function goldenEffect(){
+
+    playGoldenSound();
+
+
+    goldenOverlay.classList.remove("active");
+
+    goldenTitle.classList.remove("active");
+
+    goldenRing.classList.remove("active");
+
+
+    void goldenOverlay.offsetWidth;
+
+
+    goldenOverlay.classList.add("active");
+
+    goldenTitle.classList.add("active");
+
+    goldenRing.classList.add("active");
+
+
+    coin.classList.remove("golden-shake");
+
+    void coin.offsetWidth;
+
+    coin.classList.add("golden-shake");
+
+
+    const goldenCoin =
+        document.createElement("div");
+
+    goldenCoin.className =
+        "golden-coin";
+
+    goldenCoin.innerHTML =
+        "🪙";
+
+
+    document
+        .getElementById("game")
+        .appendChild(goldenCoin);
+
+
+    createGoldenParticles();
+
+
+    setTimeout(() => {
+
+        goldenCoin.remove();
+
+    },900);
+
+}
+
+
+/* ==================================================
+   پنل آمار
+================================================== */
+
+const stats =
+    document.createElement("div");
+
+stats.className =
+    "panel";
+
+
+stats.innerHTML = `
+
+<h3>📊 آمار بازی</h3>
+
+<div>
+🖱️ تعداد کلیک:
+<span id="clickCount">0</span>
+</div>
+
+<div>
+🪙 مجموع سکه دریافتی:
+<span id="coinCount">0</span>
+</div>
+
+<div class="golden-stat">
+✨ کلیک‌های طلایی:
+<span id="goldenClickCount">0</span>
+</div>
+
+<div class="golden-stat">
+💰 سکه از کلیک طلایی:
+<span id="goldenCoinCount">0</span>
+</div>
+
+<div>
+⏳ زمان بازی:
+<span id="timePlayed">0</span>
+ثانیه
+</div>
+
+`;
+
+
+document
+    .getElementById("game")
+    .appendChild(stats);
+
+
+const clickCount =
+    document.getElementById("clickCount");
+
+const coinCount =
+    document.getElementById("coinCount");
+
+const goldenClickCount =
+    document.getElementById("goldenClickCount");
+
+const goldenCoinCount =
+    document.getElementById("goldenCoinCount");
+
+const timePlayed =
+    document.getElementById("timePlayed");
+
+
+function updateStats(){
+
+    clickCount.innerText =
+        totalClicks;
+
+    coinCount.innerText =
+        totalCoinsEarned;
+
+    goldenClickCount.innerText =
+        totalGoldenClicks;
+
+    goldenCoinCount.innerText =
+        totalGoldenCoins;
+
+    timePlayed.innerText =
+        Math.floor(
+            (Date.now() - gameStart) / 1000
+        );
+
+}
+
+
+/* ==================================================
+   سطح ارتقاها
+================================================== */
+
+const levelBox =
+    document.createElement("div");
+
+levelBox.className =
+    "panel levelBox";
+
+
+levelBox.innerHTML = `
+
+<h3>🏪 سطح ارتقاها</h3>
+
+<div>
+💥 قدرت کلیک:
+<span id="powerLevel">1</span>
+</div>
+
+<div>
+🔋 ظرفیت انرژی:
+<span id="energyLevel">1</span>
+</div>
+
+<div>
+⚡ سرعت بازیابی:
+<span id="regenLevel">1</span>
+</div>
+
+<div>
+🍀 شانس طلایی:
+<span id="goldenChanceLevel">1</span>
+</div>
+
+<div>
+✨ ضریب طلایی:
+<span id="goldenMultiplierLevel">1</span>
+</div>
+
+`;
+
+
+document
+    .getElementById("shop")
+    .appendChild(levelBox);
+
+
+const powerLevelText =
+    document.getElementById("powerLevel");
+
+const energyLevelText =
+    document.getElementById("energyLevel");
+
+const regenLevelText =
+    document.getElementById("regenLevel");
+
+const goldenChanceLevelText =
+    document.getElementById("goldenChanceLevel");
+
+const goldenMultiplierLevelText =
+    document.getElementById("goldenMultiplierLevel");
+
+
+function updateLevels(){
+
+    powerLevelText.innerText =
+        powerLevel;
+
+    energyLevelText.innerText =
+        energyLevel;
+
+    regenLevelText.innerText =
+        regenLevel;
+
+    goldenChanceLevelText.innerText =
+        goldenChanceLevel;
+
+    goldenMultiplierLevelText.innerText =
+        goldenMultiplierLevel;
+
+}
+
+
+/* ==================================================
+   دستاوردها
+================================================== */
+
+const achievementBox =
+    document.createElement("div");
+
+achievementBox.className =
+    "panel achievementBox";
+
+
+achievementBox.innerHTML = `
+
+<h3>🏆 دستاوردها</h3>
+
+<div id="achievementList">
+هنوز دستاوردی نگرفتی.
+</div>
+
+`;
+
+
+document
+    .getElementById("game")
+    .appendChild(achievementBox);
+
+
+const achievementList =
+    document.getElementById("achievementList");
+
+
+function renderAchievements(){
+
+    const list = [];
+
+
+    if(achievements.firstClick)
+        list.push("اولین کلیک");
+
+
+    if(achievements.coin50)
+        list.push("دریافت 50 سکه");
+
+
+    if(achievements.coin300)
+        list.push("دریافت 300 سکه");
+
+
+    if(achievements.coin1000)
+        list.push("دریافت 1000 سکه");
+
+
+    if(achievements.coin5500)
+        list.push("دریافت 5500 سکه");
+
+
+    if(achievements.power10)
+        list.push("قدرت کلیک به ۱۰ رسید");
+
+
+    if(list.length === 0){
+
+        achievementList.innerHTML =
+            "هنوز دستاوردی نگرفتی.";
+
+        return;
+
+    }
+
+
+    achievementList.innerHTML =
+        list
+        .map(text =>
+            "<div>✅ " +
+            text +
+            "</div>"
+        )
+        .join("");
+
+}
+
+
+function addAchievement(text){
+
+    renderAchievements();
+
+
+    if(showAchievementAlerts){
+
+        alert(
+            "🏆 دستاورد جدید!\n\n" +
+            text
+        );
+
+    }
+
+}
+
+
+function checkAchievements(){
+
+    let changed =
+        false;
+
+
+    if(
+        !achievements.firstClick &&
+        totalClicks >= 1
+    ){
+
+        achievements.firstClick =
+            true;
+
+        addAchievement(
+            "اولین کلیک"
+        );
+
+        changed = true;
+
+    }
+
+
+    if(
+        !achievements.coin50 &&
+        totalCoinsEarned >= 50
+    ){
+
+        achievements.coin50 =
+            true;
+
+        addAchievement(
+            "دریافت 50 سکه"
+        );
+
+        changed = true;
+
+    }
+
+
+    if(
+        !achievements.coin300 &&
+        totalCoinsEarned >= 300
+    ){
+
+        achievements.coin300 =
+            true;
+
+        addAchievement(
+            "دریافت 300 سکه"
+        );
+
+        changed = true;
+
+    }
+
+
+    if(
+        !achievements.coin1000 &&
+        totalCoinsEarned >= 1000
+    ){
+
+        achievements.coin1000 =
+            true;
+
+        addAchievement(
+            "دریافت 1000 سکه"
+        );
+
+        changed = true;
+
+    }
+
+
+    if(
+        !achievements.coin5500 &&
+        totalCoinsEarned >= 5500
+    ){
+
+        achievements.coin5500 =
+            true;
+
+        addAchievement(
+            "دریافت 5500 سکه"
+        );
+
+        changed = true;
+
+    }
+
+
+    if(
+        !achievements.power10 &&
+        power >= 10
+    ){
+
+        achievements.power10 =
+            true;
+
+        addAchievement(
+            "قدرت کلیک به ۱۰ رسید"
+        );
+
+        changed = true;
+
+    }
+
+
+    renderAchievements();
+
+
+    if(changed)
+        saveGame();
+
+}
+
+
+/* ==================================================
+   ذخیره بازی
+================================================== */
+
+function saveGame(){
+
+    const data = {
+
+        coins,
+
+        stage,
+
+        power,
+
+        energy,
+
+        maxEnergy,
+
+        regen,
+
+
+        powerPrice,
+
+        energyPrice,
+
+        regenPrice,
+
+
+        powerLevel,
+
+        energyLevel,
+
+        regenLevel,
+
+
+        goldenChance,
+
+        goldenMultiplier,
+
+        goldenChanceLevel,
+
+        goldenMultiplierLevel,
+
+        goldenChancePrice,
+
+        goldenMultiplierPrice,
+
+
+        totalGoldenClicks,
+
+        totalGoldenCoins,
+
+
+        totalClicks,
+
+        totalCoinsEarned,
+
+        gameStart,
+
+        achievements
+
+    };
+
+
+    localStorage.setItem(
+        "CoinClickerSave",
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* ==================================================
+   بارگذاری بازی
+================================================== */
+
+function loadGame(){
+
+    const saved =
+        localStorage.getItem(
+            "CoinClickerSave"
+        );
+
+
+    if(!saved)
+        return;
+
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+
+        coins =
+            data.coins ?? 0;
+
+
+        stage =
+            data.stage ?? 1;
+
+
+        power =
+            data.power ?? 1;
+
+
+        energy =
+            data.energy ?? 100;
+
+
+        maxEnergy =
+            data.maxEnergy ?? 100;
+
+
+        regen =
+            data.regen ?? 1;
+
+
+        powerPrice =
+            data.powerPrice ?? 20;
+
+
+        energyPrice =
+            data.energyPrice ?? 40;
+
+
+        regenPrice =
+            data.regenPrice ?? 60;
+
+
+        powerLevel =
+            data.powerLevel ?? 1;
+
+
+        energyLevel =
+            data.energyLevel ?? 1;
+
+
+        regenLevel =
+            data.regenLevel ?? 1;
+
+
+        /* سیستم طلایی */
+
+        goldenChance =
+            data.goldenChance ?? 1;
+
+
+        goldenMultiplier =
+            data.goldenMultiplier ?? 2;
+
+
+        goldenChanceLevel =
+            data.goldenChanceLevel ?? 1;
+
+
+        goldenMultiplierLevel =
+            data.goldenMultiplierLevel ?? 1;
+
+
+        goldenChancePrice =
+            data.goldenChancePrice ?? 100;
+
+
+        goldenMultiplierPrice =
+            data.goldenMultiplierPrice ?? 250;
+
+
+        totalGoldenClicks =
+            data.totalGoldenClicks ?? 0;
+
+
+        totalGoldenCoins =
+            data.totalGoldenCoins ?? 0;
+
+
+        totalClicks =
+            data.totalClicks ?? 0;
+
+
+        totalCoinsEarned =
+            data.totalCoinsEarned ?? 0;
+
+
+        gameStart =
+            data.gameStart ?? Date.now();
+
+
+        achievements = {
+
+            firstClick:
+                !!data.achievements?.firstClick,
+
+            coin50:
+                !!data.achievements?.coin50,
+
+            coin300:
+                !!data.achievements?.coin300,
+
+            coin1000:
+                !!data.achievements?.coin1000,
+
+            coin5500:
+                !!data.achievements?.coin5500,
+
+            power10:
+                !!data.achievements?.power10
+
+        };
+
+    }
+
+    catch(error){
+
+        console.log(
+            "خطا در بارگذاری ذخیره:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   بررسی کلیک طلایی
+================================================== */
+
+function isGoldenClick(){
+
+    return Math.random() * 100 <
+        goldenChance;
+
+}
+
+
+/* ==================================================
+   کلیک اصلی
+================================================== */
+
+coin.onclick = function(e){
+
+    if(energy < 1){
+
+        showError(
+            "⚡ انرژی تموم شده!"
+        );
+
+        return;
+
+    }
+
+
+    playClick();
+
+
+    energy -= 1;
+
+
+    totalClicks++;
+
+
+    /* بررسی طلایی */
+
+    const golden =
+        isGoldenClick();
+
+
+    let earned;
+
+
+    if(golden){
+
+        earned =
+            power *
+            goldenMultiplier;
+
+
+        totalGoldenClicks++;
+
+
+        totalGoldenCoins +=
+            earned;
+
+
+        goldenEffect();
+
+    }
+
+    else{
+
+        earned =
+            power;
+
+
+        spawnFlyingCoin(e);
+
+    }
+
+
+    coins +=
+        earned;
+
+
+    totalCoinsEarned +=
+        earned;
+
+
+    checkStage();
+
+    checkAchievements();
+
+    updateUI();
+
+    updateStats();
+
+    updateRank();
+
+    updateProgress();
+
+    saveGame();
+
+};
+
+
+/* ==================================================
+   خرید ارتقا
+================================================== */
+
+function buyUpgrade(type){
+
+    const reqStats =
+        calculateUpgradeStats(type);
+
+
+    if(
+        coins <
+        reqStats.totalCost
+    ){
+
+        showError(
+            "⚠️ سکه کافی نداری!"
+        );
+
+        return;
+
+    }
+
+
+    for(
+        let i = 0;
+        i < buyAmount;
+        i++
+    ){
+
+        /* قدرت */
+
+        if(type === "power"){
+
+            coins -=
+                powerPrice;
+
+            power++;
+
+            powerLevel++;
+
+            powerPrice =
+                Math.floor(
+                    powerPrice * 1.7
+                );
+
+        }
+
+
+        /* انرژی */
+
+        else if(type === "energy"){
+
+            coins -=
+                energyPrice;
+
+            maxEnergy +=
+                20;
+
+            energy =
+                maxEnergy;
+
+            energyLevel++;
+
+            energyPrice =
+                Math.floor(
+                    energyPrice * 1.8
+                );
+
+        }
+
+
+        /* بازیابی */
+
+        else if(type === "regen"){
+
+            coins -=
+                regenPrice;
+
+            regen +=
+                .5;
+
+            regenLevel++;
+
+            regenPrice =
+                Math.floor(
+                    regenPrice * 2
+                );
+
+        }
+
+
+        /* شانس طلایی */
+
+        else if(type === "goldenChance"){
+
+            coins -=
+                goldenChancePrice;
+
+            goldenChance +=
+                1;
+
+            goldenChanceLevel++;
+
+
+            goldenChancePrice =
+                Math.floor(
+                    goldenChancePrice * 2.1
+                );
+
+
+            /* سقف منطقی شانس */
+
+            if(goldenChance > 50){
+
+                goldenChance = 50;
+
+            }
+
+        }
+
+
+        /* ضریب طلایی */
+
+        else if(
+            type === "goldenMultiplier"
+        ){
+
+            coins -=
+                goldenMultiplierPrice;
+
+            goldenMultiplier +=
+                1;
+
+            goldenMultiplierLevel++;
+
+
+            goldenMultiplierPrice =
+                Math.floor(
+                    goldenMultiplierPrice * 2.4
+                );
+
+        }
+
+    }
+
+
+    updateUI();
+
+    updateLevels();
+
+    updateRank();
+
+    updateProgress();
+
+    checkAchievements();
+
+    saveGame();
+
+}
+
+
+/* ==================================================
+   اتصال دکمه‌ها
+================================================== */
+
+document
+    .getElementById("upgradePower")
+    .onclick =
+    () => buyUpgrade("power");
+
+
+document
+    .getElementById("upgradeEnergy")
+    .onclick =
+    () => buyUpgrade("energy");
+
+
+document
+    .getElementById("upgradeRegen")
+    .onclick =
+    () => buyUpgrade("regen");
+
+
+document
+    .getElementById("upgradeGoldenChance")
+    .onclick =
+    () => buyUpgrade("goldenChance");
+
+
+document
+    .getElementById("upgradeGoldenMultiplier")
+    .onclick =
+    () => buyUpgrade("goldenMultiplier");
+
+
+/* ==================================================
+   شارژ انرژی
+================================================== */
+
+setInterval(function(){
+
+    if(
+        energy <
+        maxEnergy
+    ){
+
+        energy +=
+            regen / 10;
+
+
+        if(
+            energy >
+            maxEnergy
+        )
+            energy =
+                maxEnergy;
+
+
+        updateUI();
+
+    }
+
+},100);
+
+
+/* ==================================================
+   پنل خرید چندتایی
+================================================== */
+
+const buyBox =
+    document.createElement("div");
+
+
+buyBox.className =
+    "panel";
+
+
+buyBox.innerHTML = `
+
+<h3>🛒 حالت خرید</h3>
+
+<button id="buy1">
+×1
+</button>
+
+<button id="buy5">
+×5
+</button>
+
+<button id="buy10">
+×10
+</button>
+
+<div>
+حالت فعلی:
+<span id="buyAmountText">
+×1
+</span>
+</div>
+
+`;
+
+
+document
+    .getElementById("shop")
+    .appendChild(buyBox);
+
+
+const buyAmountText =
+    document.getElementById(
+        "buyAmountText"
+    );
+
+
+document
+    .getElementById("buy1")
+    .onclick =
+    function(){
+
+        buyAmount = 1;
+
+        buyAmountText.innerText =
+            "×1";
+
+        updateUI();
+
+    };
+
+
+document
+    .getElementById("buy5")
+    .onclick =
+    function(){
+
+        buyAmount = 5;
+
+        buyAmountText.innerText =
+            "×5";
+
+        updateUI();
+
+    };
+
+
+document
+    .getElementById("buy10")
+    .onclick =
+    function(){
+
+        buyAmount = 10;
+
+        buyAmountText.innerText =
+            "×10";
+
+        updateUI();
+
+    };
+
+
+/* ==================================================
+   پاداش روزانه
+================================================== */
+
+const dailyBox =
+    document.createElement("div");
+
+
+dailyBox.className =
+    "panel";
+
+
+dailyBox.innerHTML = `
+
+<h3>🎁 پاداش روزانه</h3>
+
+<button id="dailyReward">
+دریافت 100 سکه
+</button>
+
+`;
+
+
+document
+    .getElementById("game")
+    .appendChild(dailyBox);
+
+
+document
+    .getElementById("dailyReward")
+    .onclick =
+    function(){
+
+        const today =
+            new Date()
+            .toDateString();
+
+
+        const last =
+            localStorage.getItem(
+                "dailyReward"
+            );
+
+
+        if(last === today){
+
+            showError(
+                "امروز پاداشت را گرفته‌ای!"
+            );
+
+            return;
+
+        }
+
+
+        coins += 100;
+
+        totalCoinsEarned += 100;
+
+
+        localStorage.setItem(
+            "dailyReward",
+            today
+        );
+
+
+        checkStage();
+
+        checkAchievements();
+
+        updateUI();
+
+        updateRank();
+
+        updateProgress();
+
+        saveGame();
+
+
+        alert(
+            "🎉 100 سکه دریافت کردی."
+        );
+
+    };
+
+
+/* ==================================================
+   رتبه بازیکن
+================================================== */
+
+const rankBox =
+    document.createElement("div");
+
+
+rankBox.className =
+    "panel rankBox";
+
+
+rankBox.innerHTML = `
+
+<h3>👑 رتبه بازیکن</h3>
+
+<div>
+رتبه:
+<span id="rankText">
+حروم لقمه
+</span>
+</div>
+
+<div style="margin-top:10px">
+
+مرحله بعد
+
+<div id="progressBar">
+
+<div id="progressFill"></div>
+
+</div>
+
+<span id="progressText">
+0%
+</span>
+
+</div>
+
+`;
+
+
+document
+    .getElementById("game")
+    .appendChild(rankBox);
+
+
+const rankText =
+    document.getElementById(
+        "rankText"
+    );
+
+
+const progressFill =
+    document.getElementById(
+        "progressFill"
+    );
+
+
+const progressText =
+    document.getElementById(
+        "progressText"
+    );
+
+
+function getRankInfo(){
+
+    const ranks = [
+
+        {
+            name:"حروم لقمه",
+            start:0,
+            end:50
+        },
+
+        {
+            name:"نیگا",
+            start:50,
+            end:300
+        },
+
+        {
+            name:"کصکش دو عالم",
+            start:300,
+            end:1000
+        },
+
+        {
+            name:"mr.26 kir",
+            start:1000,
+            end:5500
+        },
+
+        {
+            name:"ابر کونی",
+            start:5500,
+            end:10000
+        },
+
+        {
+            name:"سگ دست اموز قربانی",
+            start:10000,
+            end:15000
+        },
+
+        {
+            name:"سکه باز جنده",
+            start:15000,
+            end:30000
+        },
+
+        {
+            name:"خسته شو حاجی",
+            start:25000,
+            end:50000
+        },
+
+        {
+            name:"فراتر از یه کونی",
+            start:50000,
+            end:100000
+        }
+
+    ];
+
+
+    for(
+        let i = 0;
+        i < ranks.length;
+        i++
+    ){
+
+        if(
+            coins <
+            ranks[i].end
+        )
+            return ranks[i];
+
+    }
+
+
+    return {
+
+        name:"خدای سکه",
+
+        start:100000,
+
+        end:100000,
+
+        maxed:true
+
+    };
+
+}
+
+
+function updateRank(){
+
+    const info =
+        getRankInfo();
+
+
+    rankText.innerText =
+        info.name;
+
+}
+
+
+function updateProgress(){
+
+    const info =
+        getRankInfo();
+
+
+    if(info.maxed){
+
+        progressFill.style.width =
+            "100%";
+
+        progressText.innerText =
+            "100%";
+
+        return;
+
+    }
+
+
+    const range =
+        info.end -
+        info.start;
+
+
+    let percent =
+        range > 0
+        ?
+        (
+            (coins - info.start)
+            / range
+        ) * 100
+        :
+        100;
+
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        );
+
+
+    progressFill.style.width =
+        percent + "%";
+
+
+    progressText.innerText =
+        Math.floor(percent) + "%";
+
+}
+
+
+/* ==================================================
+   ذخیره خودکار
+================================================== */
+
+window.addEventListener(
+    "beforeunload",
+    saveGame
+);
+
+
+window.addEventListener(
+    "pagehide",
+    saveGame
+);
+
+
+setInterval(
+    saveGame,
+    3000
+);
+
+
+/* ==================================================
+   پاداش خودکار هر دقیقه
+================================================== */
+
+setInterval(function(){
+
+    coins += 5;
+
+    totalCoinsEarned += 5;
+
+
+    checkStage();
+
+    checkAchievements();
+
+    updateUI();
+
+    updateRank();
+
+    updateProgress();
+
+    saveGame();
+
+},60000);
+
+
+/* ==================================================
+   ذخیره بازی
+================================================== */
+
+const saveButton =
+    document.createElement("button");
+
+
+saveButton.innerText =
+    "💾 ذخیره بازی";
+
+
+saveButton.onclick =
+    function(){
+
+        saveGame();
+
+        alert(
+            "بازی ذخیره شد."
+        );
+
+    };
+
+
+document
+    .getElementById("shop")
+    .appendChild(saveButton);
+
+
+/* ==================================================
+   بارگذاری بازی
+================================================== */
+
+const loadButton =
+    document.createElement("button");
+
+
+loadButton.innerText =
+    "📂 بارگذاری بازی";
+
+
+loadButton.onclick =
+    function(){
+
+        loadGame();
+
+        checkStage();
+
+        updateUI();
+
+        updateStats();
+
+        updateLevels();
+
+        updateRank();
+
+        updateProgress();
+
+        renderAchievements();
+
+
+        alert(
+            "بازی بارگذاری شد."
+        );
+
+    };
+
+
+document
+    .getElementById("shop")
+    .appendChild(loadButton);
+
+
+/* ==================================================
+   خروجی ذخیره
+================================================== */
+
+const exportBtn =
+    document.createElement("button");
+
+
+exportBtn.innerText =
+    "📤 خروجی ذخیره";
+
+
+exportBtn.onclick =
+    function(){
+
+        const data =
+            localStorage.getItem(
+                "CoinClickerSave"
+            );
+
+
+        if(!data){
+
+            alert(
+                "ذخیره‌ای وجود ندارد."
+            );
+
+            return;
+
+        }
+
+
+        const blob =
+            new Blob(
+                [data],
+                {
+                    type:
+                        "application/json"
+                }
+            );
+
+
+        const a =
+            document.createElement("a");
+
+
+        a.href =
+            URL.createObjectURL(blob);
+
+
+        a.download =
+            "CoinClickerSave.json";
+
+
+        a.click();
+
+
+        URL.revokeObjectURL(
+            a.href
+        );
+
+    };
+
+
+document
+    .getElementById("shop")
+    .appendChild(exportBtn);
+
+
+/* ==================================================
+   وارد کردن ذخیره
+================================================== */
+
+const importBtn =
+    document.createElement("button");
+
+
+importBtn.innerText =
+    "📥 وارد کردن ذخیره";
+
+
+importBtn.onclick =
+    function(){
+
+        const input =
+            document.createElement("input");
+
+
+        input.type =
+            "file";
+
+
+        input.accept =
+            ".json";
+
+
+        input.onchange =
+            function(e){
+
+                const file =
+                    e.target.files[0];
+
+
+                if(!file)
+                    return;
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function(){
+
+                        try{
+
+                            JSON.parse(
+                                reader.result
+                            );
+
+
+                            localStorage.setItem(
+                                "CoinClickerSave",
+                                reader.result
+                            );
+
+
+                            loadGame();
+
+                            checkStage();
+
+                            updateUI();
+
+                            updateStats();
+
+                            updateLevels();
+
+                            updateRank();
+
+                            updateProgress();
+
+                            renderAchievements();
+
+
+                            alert(
+                                "ذخیره بازی با موفقیت وارد شد."
+                            );
+
+                        }
+
+                        catch(error){
+
+                            alert(
+                                "فایل ذخیره خراب یا نامعتبر است."
+                            );
+
+                        }
+
+                    };
+
+
+                reader.readAsText(
+                    file
+                );
+
+            };
+
+
+        input.click();
+
+    };
+
+
+document
+    .getElementById("shop")
+    .appendChild(importBtn);
+
+
+/* ==================================================
+   ریست بازی
+================================================== */
+
+const resetButton =
+    document.createElement("button");
+
+
+resetButton.innerText =
+    "🔄 شروع دوباره بازی";
+
+
+resetButton.onclick =
+    function(){
+
+        if(
+            !confirm(
+                "آیا مطمئن هستید؟ تمام پیشرفت بازی پاک می‌شود."
+            )
+        )
+            return;
+
+
+        localStorage.removeItem(
+            "CoinClickerSave"
+        );
+
+
+        coins = 0;
+
+        stage = 1;
+
+        power = 1;
+
+        energy = 100;
+
+        maxEnergy = 100;
+
+        regen = 1;
+
+
+        powerPrice = 20;
+
+        energyPrice = 40;
+
+        regenPrice = 60;
+
+
+        powerLevel = 1;
+
+        energyLevel = 1;
+
+        regenLevel = 1;
+
+
+        /* ریست طلایی */
+
+        goldenChance = 1;
+
+        goldenMultiplier = 2;
+
+        goldenChanceLevel = 1;
+
+        goldenMultiplierLevel = 1;
+
+        goldenChancePrice = 100;
+
+        goldenMultiplierPrice = 250;
+
+        totalGoldenClicks = 0;
+
+        totalGoldenCoins = 0;
+
+
+        totalClicks = 0;
+
+        totalCoinsEarned = 0;
+
+        gameStart =
+            Date.now();
+
+        buyAmount = 1;
+
+
+        achievements = {
+
+            firstClick:false,
+
+            coin50:false,
+
+            coin300:false,
+
+            coin1000:false,
+
+            coin5500:false,
+
+            power10:false
+
+        };
+
+
+        achievementList.innerHTML =
+            "هنوز دستاوردی نگرفتی.";
+
+
+        coin.src =
+            "img1.jpg";
+
+
+        updateUI();
+
+        updateStats();
+
+        updateLevels();
+
+        updateRank();
+
+        updateProgress();
+
+
+        saveGame();
+
+    };
+
+
+document
+    .getElementById("shop")
+    .appendChild(resetButton);
+
+
+/* ==================================================
+   نسخه
+================================================== */
+
+const version =
+    document.createElement("div");
+
+
+version.className =
+    "panel small";
+
+
+version.innerHTML =
+    "یکی از کنده کاریای بشا (با ایده MOEIN)";
+
+
+document
+    .getElementById("game")
+    .appendChild(version);
+
+
+/* ==================================================
+   پنل آپدیت
+================================================== */
+
+const UPDATE_VERSION =
+    "golden-click-v1";
+
+
+const updateModal =
+    document.getElementById(
+        "updateModal"
+    );
+
+
+const closeUpdate =
+    document.getElementById(
+        "closeUpdate"
+    );
+
+
+function showUpdateIfNeeded(){
+
+    const seen =
+        localStorage.getItem(
+            "CoinClickerUpdateSeen"
+        );
+
+
+    if(
+        seen !== UPDATE_VERSION
+    ){
+
+        updateModal.classList.add(
+            "show"
+        );
+
+    }
+
+}
+
+
+closeUpdate.onclick =
+    function(){
+
+        localStorage.setItem(
+            "CoinClickerUpdateSeen",
+            UPDATE_VERSION
+        );
+
+
+        updateModal.classList.remove(
+            "show"
+        );
+
+    };
+
+
+/* ==================================================
+   راه‌اندازی بازی
+================================================== */
+
+loadGame();
+
+checkStage();
+
+
+showAchievementAlerts =
+    false;
+
+
+checkAchievements();
+
+
+showAchievementAlerts =
+    true;
+
+
+updateUI();
+
+updateStats();
+
+updateLevels();
+
+updateRank();
+
+updateProgress();
+
+
+/* نمایش آپدیت */
+
+showUpdateIfNeeded();
+
+</script>
+
+</body>
+
+</html>    padding:20px;
+    text-align:center;
+    box-shadow:0 0 20px #000;
     position: relative;
 }
 
