@@ -129,6 +129,14 @@ button:active{
     animation: floatUp 0.8s ease-out forwards;  
     user-select: none;  
 }  
+
+/* افکت ویژه کلیک طلایی */
+.flying-coin.golden {
+    font-size: 28px;
+    color: #fff700;
+    text-shadow: 0 0 15px #ffaa00, 0 0 25px #ffea00;
+    font-weight: 900;
+}
   
 @keyframes floatUp {  
     0% {  
@@ -230,6 +238,19 @@ button:active{
         <span id="regenPrice">60</span> سکه  
     </button>  
 
+    <!-- ارتقای کلیک طلایی -->
+    <button id="upgradeGoldenChance" style="background: #d4af37;">  
+        ✨ افزایش شانس کلیک طلایی  
+        <div class="upgrade-detail" id="goldenChanceDetail">شانس: 0% ➔ 1%</div>  
+        <span id="goldenChancePrice">50</span> سکه  
+    </button>  
+
+    <button id="upgradeGoldenMult" style="background: #b8860b;">  
+        👑 افزایش ضریب کلیک طلایی  
+        <div class="upgrade-detail" id="goldenMultDetail">ضریب: 2x ➔ 3x</div>  
+        <span id="goldenMultPrice">100</span> سکه  
+    </button>  
+
 </div>
 
 </div>  <script>  
@@ -244,10 +265,16 @@ let power = 1;
 let energy = 100;  
 let maxEnergy = 100;  
 let regen = 1;  
+
+// کلیک طلایی
+let goldenChance = 0; // درصد شانس (از 0)
+let goldenMult = 2; // ضریب کلیک طلایی (پایه 2 برابر)
   
 let powerPrice = 20;  
 let energyPrice = 40;  
 let regenPrice = 60;  
+let goldenChancePrice = 50;
+let goldenMultPrice = 100;
   
 /* ==================================================  
    سطح ارتقاها  
@@ -256,6 +283,8 @@ let regenPrice = 60;
 let powerLevel = 1;  
 let energyLevel = 1;  
 let regenLevel = 1;  
+let goldenChanceLevel = 0;
+let goldenMultLevel = 1;
   
 /* ==================================================  
    آمار  
@@ -307,10 +336,14 @@ const powerText = document.getElementById("power");
 const powerPriceText = document.getElementById("powerPrice");  
 const energyPriceText = document.getElementById("energyPrice");  
 const regenPriceText = document.getElementById("regenPrice");  
+const goldenChancePriceText = document.getElementById("goldenChancePrice");
+const goldenMultPriceText = document.getElementById("goldenMultPrice");
   
 const powerDetail = document.getElementById("powerDetail");  
 const energyDetail = document.getElementById("energyDetail");  
 const regenDetail = document.getElementById("regenDetail");  
+const goldenChanceDetail = document.getElementById("goldenChanceDetail");
+const goldenMultDetail = document.getElementById("goldenMultDetail");
   
 const toastError = document.getElementById("toastError");  
   
@@ -320,8 +353,15 @@ const toastError = document.getElementById("toastError");
   
 function calculateUpgradeStats(type) {  
     let cost = 0;  
-    let tempPrice = (type === 'power') ? powerPrice : (type === 'energy') ? energyPrice : regenPrice;  
-    let tempVal = (type === 'power') ? power : (type === 'energy') ? maxEnergy : regen;  
+    let tempPrice = (type === 'power') ? powerPrice : 
+                    (type === 'energy') ? energyPrice : 
+                    (type === 'regen') ? regenPrice : 
+                    (type === 'goldenChance') ? goldenChancePrice : goldenMultPrice;  
+
+    let tempVal = (type === 'power') ? power : 
+                  (type === 'energy') ? maxEnergy : 
+                  (type === 'regen') ? regen : 
+                  (type === 'goldenChance') ? goldenChance : goldenMult;  
   
     for (let i = 0; i < buyAmount; i++) {  
         cost += tempPrice;  
@@ -334,6 +374,12 @@ function calculateUpgradeStats(type) {
         } else if (type === 'regen') {  
             tempVal += 0.5;  
             tempPrice = Math.floor(tempPrice * 2);  
+        } else if (type === 'goldenChance') {  
+            tempVal += 1; // هر سطح +1% شانس  
+            tempPrice = Math.floor(tempPrice * 1.9);  
+        } else if (type === 'goldenMult') {  
+            tempVal += 1; // هر سطح +1x ضریب  
+            tempPrice = Math.floor(tempPrice * 2.2);  
         }  
     }  
     return { totalCost: cost, nextVal: tempVal };  
@@ -363,6 +409,14 @@ function updateUI(){
     const rStats = calculateUpgradeStats('regen');  
     regenPriceText.innerText = rStats.totalCost;  
     regenDetail.innerText = `سرعت: ${regen}/s ➔ ${rStats.nextVal}/s`;  
+
+    const gcStats = calculateUpgradeStats('goldenChance');  
+    goldenChancePriceText.innerText = gcStats.totalCost;  
+    goldenChanceDetail.innerText = `شانس: ${goldenChance}% ➔ ${gcStats.nextVal}%`;  
+
+    const gmStats = calculateUpgradeStats('goldenMult');  
+    goldenMultPriceText.innerText = gmStats.totalCost;  
+    goldenMultDetail.innerText = `ضریب: ${goldenMult}x ➔ ${gmStats.nextVal}x`;  
   
     let energyPercent = (energy / maxEnergy) * 100;  
     energyFill.style.width = energyPercent + "%";  
@@ -399,19 +453,19 @@ function checkStage(){
    صدای کلیک  
 ================================================== */  
   
-function playClick(){  
+function playClick(isGolden = false){  
     try{  
         const ctx = new (window.AudioContext || window.webkitAudioContext)();  
         const osc = ctx.createOscillator();  
         const gain = ctx.createGain();  
-        osc.type = "triangle";  
-        osc.frequency.value = 700;  
-        gain.gain.value = 0.04;  
+        osc.type = isGolden ? "sine" : "triangle";  
+        osc.frequency.value = isGolden ? 1200 : 700;  
+        gain.gain.value = isGolden ? 0.08 : 0.04;  
         osc.connect(gain);  
         gain.connect(ctx.destination);  
         osc.start();  
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);  
-        osc.stop(ctx.currentTime + 0.08);  
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (isGolden ? 0.2 : 0.08));  
+        osc.stop(ctx.currentTime + (isGolden ? 0.2 : 0.08));  
     }catch(e){ console.log("Audio error:",e); }  
 }  
   
@@ -419,10 +473,10 @@ function playClick(){
    افکت پرت شدن سکه با کلیک  
 ================================================== */  
   
-function spawnFlyingCoin(e) {  
+function spawnFlyingCoin(e, earnedCoins, isGolden) {  
     const coinElem = document.createElement("div");  
-    coinElem.className = "flying-coin";  
-    coinElem.innerHTML = `🪙 +${power}`;  
+    coinElem.className = isGolden ? "flying-coin golden" : "flying-coin";  
+    coinElem.innerHTML = isGolden ? `✨ +${earnedCoins}` : `🪙 +${earnedCoins}`;  
       
     const rect = coin.getBoundingClientRect();  
     const gameRect = document.getElementById("game").getBoundingClientRect();  
@@ -480,17 +534,23 @@ levelBox.innerHTML = `
 <div>💥 قدرت کلیک: <span id="powerLevel">1</span></div>  
 <div>🔋 ظرفیت انرژی: <span id="energyLevel">1</span></div>  
 <div>⚡ سرعت بازیابی: <span id="regenLevel">1</span></div>  
+<div>✨ شانس کلیک طلایی: <span id="goldenChanceLevel">0</span></div>  
+<div>👑 ضریب کلیک طلایی: <span id="goldenMultLevel">1</span></div>  
 `;  
 document.getElementById("shop").appendChild(levelBox);  
   
 const powerLevelText = document.getElementById("powerLevel");  
 const energyLevelText = document.getElementById("energyLevel");  
 const regenLevelText = document.getElementById("regenLevel");  
+const goldenChanceLevelText = document.getElementById("goldenChanceLevel");  
+const goldenMultLevelText = document.getElementById("goldenMultLevel");  
   
 function updateLevels(){  
     powerLevelText.innerText = powerLevel;  
     energyLevelText.innerText = energyLevel;  
     regenLevelText.innerText = regenLevel;  
+    goldenChanceLevelText.innerText = goldenChanceLevel;  
+    goldenMultLevelText.innerText = goldenMultLevel;  
 }  
   
 /* ==================================================  
@@ -550,8 +610,9 @@ function checkAchievements(){
 function saveGame(){  
     const data = {  
         coins, stage, power, energy, maxEnergy, regen,  
-        powerPrice, energyPrice, regenPrice,  
-        powerLevel, energyLevel, regenLevel,  
+        goldenChance, goldenMult,
+        powerPrice, energyPrice, regenPrice, goldenChancePrice, goldenMultPrice,
+        powerLevel, energyLevel, regenLevel, goldenChanceLevel, goldenMultLevel,
         totalClicks, totalCoinsEarned, gameStart, achievements  
     };  
     localStorage.setItem("CoinClickerSave", JSON.stringify(data));  
@@ -568,12 +629,22 @@ function loadGame(){
         energy = data.energy ?? 100;  
         maxEnergy = data.maxEnergy ?? 100;  
         regen = data.regen ?? 1;  
+
+        goldenChance = data.goldenChance ?? 0;  
+        goldenMult = data.goldenMult ?? 2;  
+
         powerPrice = data.powerPrice ?? 20;  
         energyPrice = data.energyPrice ?? 40;  
         regenPrice = data.regenPrice ?? 60;  
+        goldenChancePrice = data.goldenChancePrice ?? 50;  
+        goldenMultPrice = data.goldenMultPrice ?? 100;  
+
         powerLevel = data.powerLevel ?? 1;  
         energyLevel = data.energyLevel ?? 1;  
         regenLevel = data.regenLevel ?? 1;  
+        goldenChanceLevel = data.goldenChanceLevel ?? 0;  
+        goldenMultLevel = data.goldenMultLevel ?? 1;  
+
         totalClicks = data.totalClicks ?? 0;  
         totalCoinsEarned = data.totalCoinsEarned ?? 0;  
         gameStart = data.gameStart ?? Date.now();  
@@ -597,14 +668,25 @@ coin.onclick = function(e){
         showError("⚡ انرژی تموم شده!");  
         return;  
     }  
+
+    // بررسی شانس کلیک طلایی
+    let isGolden = false;
+    if(goldenChance > 0) {
+        let roll = Math.random() * 100;
+        if(roll < goldenChance) {
+            isGolden = true;
+        }
+    }
   
-    playClick();  
-    spawnFlyingCoin(e);  
+    let earnedCoins = isGolden ? (power * goldenMult) : power;
+
+    playClick(isGolden);  
+    spawnFlyingCoin(e, earnedCoins, isGolden);  
   
     energy -= 1;  
-    coins += power;  
+    coins += earnedCoins;  
     totalClicks++;  
-    totalCoinsEarned += power;  
+    totalCoinsEarned += earnedCoins;  
   
     checkStage();  
     checkAchievements();  
@@ -647,6 +729,18 @@ function buyUpgrade(type){
             regenLevel++;  
             regenPrice = Math.floor(regenPrice * 2);  
         }  
+        else if(type === "goldenChance"){  
+            coins -= goldenChancePrice;  
+            goldenChance += 1;  
+            goldenChanceLevel++;  
+            goldenChancePrice = Math.floor(goldenChancePrice * 1.9);  
+        }  
+        else if(type === "goldenMult"){  
+            coins -= goldenMultPrice;  
+            goldenMult += 1;  
+            goldenMultLevel++;  
+            goldenMultPrice = Math.floor(goldenMultPrice * 2.2);  
+        }  
     }  
   
     updateUI();  
@@ -664,6 +758,8 @@ function buyUpgrade(type){
 document.getElementById("upgradePower").onclick = () => buyUpgrade("power");  
 document.getElementById("upgradeEnergy").onclick = () => buyUpgrade("energy");  
 document.getElementById("upgradeRegen").onclick = () => buyUpgrade("regen");  
+document.getElementById("upgradeGoldenChance").onclick = () => buyUpgrade("goldenChance");  
+document.getElementById("upgradeGoldenMult").onclick = () => buyUpgrade("goldenMult");  
   
 /* ==================================================  
    شارژ انرژی  
@@ -889,8 +985,9 @@ resetButton.onclick = function(){
     if(!confirm("آیا مطمئن هستید؟ تمام پیشرفت بازی پاک می‌شود.")) return;  
     localStorage.removeItem("CoinClickerSave");  
     coins = 0; stage = 1; power = 1; energy = 100; maxEnergy = 100; regen = 1;  
-    powerPrice = 20; energyPrice = 40; regenPrice = 60;  
-    powerLevel = 1; energyLevel = 1; regenLevel = 1;  
+    goldenChance = 0; goldenMult = 2;
+    powerPrice = 20; energyPrice = 40; regenPrice = 60; goldenChancePrice = 50; goldenMultPrice = 100;
+    powerLevel = 1; energyLevel = 1; regenLevel = 1; goldenChanceLevel = 0; goldenMultLevel = 1;
     totalClicks = 0; totalCoinsEarned = 0; gameStart = Date.now(); buyAmount = 1;  
     achievements = { firstClick:false, coin50:false, coin300:false, coin1000:false, coin5500:false, power10:false };  
     achievementList.innerHTML = "هنوز دستاوردی نگرفتی.";  
