@@ -536,7 +536,15 @@ function updateUI(){
 
 function checkStage(){
 
-    if(coins >= 5500){
+    if(coins >= 15000){
+
+        stage = 6;
+
+        coin.src = "nezam.jpg";
+
+    }
+
+    else if(coins >= 5500){
 
         stage = 5;
 
@@ -1528,10 +1536,10 @@ function getRankInfo(){
         {name:"کصکش دو عالم", start:300, end:1000},
         {name:"mr.26 kir", start:1000, end:5500},
         {name:"ابر کونی", start:5500, end:10000},
-        {name:"مورد امرزش صفار", start:10000, end:15000},
-        {name:"سلطان سکه", start:15000, end:25000},
-        {name:"امپراتور سکه", start:25000, end:50000},
-        {name:"افسانه‌ای", start:50000, end:100000}
+        {name:"سگ دست اموز قربانی", start:10000, end:15000},
+        {name:"سکه باز جنده", start:15000, end:30000},
+        {name:"خسته شو حاجی", start:25000, end:50000},
+        {name:"فراتر از یه کونی", start:50000, end:100000}
     ];
 
     for(let i = 0; i < ranks.length; i++){
