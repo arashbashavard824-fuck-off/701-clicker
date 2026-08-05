@@ -455,6 +455,8 @@ let achievements = {
 
 };
 
+let showAchievementAlerts = true;
+
 
 /* ==================================================
    رتبه
@@ -872,107 +874,99 @@ const achievementList =
 document.getElementById("achievementList");
 
 
-function addAchievement(text){
+function renderAchievements(showAlerts = false){
 
-    if(
-        achievementList.innerHTML ===
-        "هنوز دستاوردی نگرفتی."
-    ){
+    const list = [];
 
-        achievementList.innerHTML = "";
+    if(achievements.firstClick)
+        list.push("اولین کلیک");
 
+    if(achievements.coin50)
+        list.push("دریافت 50 سکه");
+
+    if(achievements.coin300)
+        list.push("دریافت 300 سکه");
+
+    if(achievements.coin1000)
+        list.push("دریافت 1000 سکه");
+
+    if(achievements.coin5500)
+        list.push("دریافت 5500 سکه");
+
+    if(achievements.power10)
+        list.push("قدرت کلیک به ۱۰ رسید");
+
+    if(list.length === 0){
+        achievementList.innerHTML = "هنوز دستاوردی نگرفتی.";
+        return;
     }
 
-    achievementList.innerHTML +=
-        "<div>✅ " +
-        text +
-        "</div>";
+    achievementList.innerHTML = list
+        .map(text => "<div>✅ " + text + "</div>")
+        .join("");
+}
 
-    alert(
-        "🏆 دستاورد جدید!\n\n" +
-        text
-    );
+function addAchievement(text){
+
+    renderAchievements();
+
+    if(showAchievementAlerts){
+        alert(
+            "🏆 دستاورد جدید!\n\n" +
+            text
+        );
+    }
 
 }
 
 
 function checkAchievements(){
 
-    if(
-        !achievements.firstClick &&
-        totalClicks >= 1
-    )
+    let changed = false;
 
+    if(!achievements.firstClick && totalClicks >= 1){
+        achievements.firstClick = true;
+        addAchievement("اولین کلیک");
+        changed = true;
+    }
 
-    if(
-        !achievements.coin50 &&
-        coins >= 50
-    ){
-
+    // دستاوردها بر اساس مجموع سکه‌های به‌دست‌آمده هستند،
+    // نه موجودی فعلی؛ بنابراین با خرج کردن سکه‌ها از بین نمی‌روند.
+    if(!achievements.coin50 && totalCoinsEarned >= 50){
         achievements.coin50 = true;
-
-        addAchievement(
-            "جمع‌آوری 50 سکه"
-        );
-
+        addAchievement("دریافت 50 سکه");
+        changed = true;
     }
 
-
-    if(
-        !achievements.coin300 &&
-        coins >= 300
-    ){
-
+    if(!achievements.coin300 && totalCoinsEarned >= 300){
         achievements.coin300 = true;
-
-        addAchievement(
-            "جمع‌آوری 300 سکه"
-        );
-
+        addAchievement("دریافت 300 سکه");
+        changed = true;
     }
 
-
-    if(
-        !achievements.coin1000 &&
-        coins >= 1000
-    ){
-
+    if(!achievements.coin1000 && totalCoinsEarned >= 1000){
         achievements.coin1000 = true;
-
-        addAchievement(
-            "جمع‌آوری 1000 سکه"
-        );
-
+        addAchievement("دریافت 1000 سکه");
+        changed = true;
     }
 
-
-    if(
-        !achievements.coin1000 &&
-        coins >= 5500
-    ){
-
+    if(!achievements.coin5500 && totalCoinsEarned >= 5500){
         achievements.coin5500 = true;
-
-        addAchievement(
-            "جمع‌آوری 5500 سکه"
-        );
-
+        addAchievement("دریافت 5500 سکه");
+        changed = true;
     }
 
-
-    if(
-        !achievements.power10 &&
-        power >= 10
-    ){
-
+    if(!achievements.power10 && power >= 10){
         achievements.power10 = true;
-
-        addAchievement(
-            "قدرت کلیک به ۱۰ رسید"
-        );
-
+        addAchievement("قدرت کلیک به ۱۰ رسید");
+        changed = true;
     }
 
+    renderAchievements();
+
+    if(changed){
+        saveGame();
+    }
 }
 
 
@@ -1096,9 +1090,14 @@ function loadGame(){
         gameStart =
             data.gameStart ?? Date.now();
 
-        achievements =
-            data.achievements ??
-            achievements;
+        achievements = {
+            firstClick: !!data.achievements?.firstClick,
+            coin50: !!data.achievements?.coin50,
+            coin300: !!data.achievements?.coin300,
+            coin1000: !!data.achievements?.coin1000,
+            coin5500: !!data.achievements?.coin5500,
+            power10: !!data.achievements?.power10
+        };
 
     }
 
@@ -1432,6 +1431,7 @@ document.getElementById(
     }
 
     coins += 100;
+    totalCoinsEarned += 100;
 
     localStorage.setItem(
         "dailyReward",
@@ -1520,123 +1520,79 @@ const progressText =
     );
 
 
-function updateRank(){
+function getRankInfo(){
 
-    if(coins < 50){
+    const ranks = [
+        {name:"حروم لقمه", start:0, end:50},
+        {name:"نیگا", start:50, end:300},
+        {name:"کصکش دو عالم", start:300, end:1000},
+        {name:"mr.26 kir", start:1000, end:5500},
+        {name:"ابر کونی", start:5500, end:10000},
+        {name:"مورد امرزش صفار", start:10000, end:15000},
+        {name:"سلطان سکه", start:15000, end:25000},
+        {name:"امپراتور سکه", start:25000, end:50000},
+        {name:"افسانه‌ای", start:50000, end:100000}
+    ];
 
-        rank = "حروم لقمه";
+    for(let i = 0; i < ranks.length; i++){
 
+        if(coins < ranks[i].end){
+            return ranks[i];
+        }
     }
 
-    else if(coins < 300){
-
-        rank = "نیگا";
-
-    }
-
-    else if(coins < 1000){
-
-        rank = "کصکش دو عالم";
-
-    }
-
-    else if(coins < 5500){
-
-        rank = "mr.26 kir";
-
-    }
-
-    else if(coins < 10000){
-
-        rank = "ابر کونی";
-
-    }
-
-    else if(coin < 15000){
-
-        rank = "مورد امرزش صفار";
-
-    }
-
-    rankText.innerText =
-        rank;
-
+    // بعد از آخرین رتبه هم نوار پیشرفت کامل می‌ماند.
+    return {
+        name:"خدای سکه",
+        start:100000,
+        end:100000,
+        maxed:true
+    };
 }
 
+function updateRank(){
+
+    const info = getRankInfo();
+
+    rank = info.name;
+    rankText.innerText = rank;
+}
 
 function updateProgress(){
 
-    let start = 0;
+    const info = getRankInfo();
 
-    let end = 50;
+    if(info.maxed){
 
-
-    if(stage === 1){
-
-        start = 0;
-
-        end = 50;
-
+        progressFill.style.width = "100%";
+        progressText.innerText = "100%";
+        return;
     }
 
-    else if(stage === 2){
+    const range = info.end - info.start;
 
-        start = 50;
+    let percent = range > 0
+        ? ((coins - info.start) / range) * 100
+        : 100;
 
-        end = 300;
+    percent = Math.max(0, Math.min(100, percent));
 
-    }
-
-    else if(stage === 3){
-
-        start = 300;
-
-        end = 1000;
-
-    }
-
-    else if(stage === 4){
-
-        start = 1000;
-
-        end = 5500;
-
-    }
-
-    else if(stage === 5){
-
-        start = 5500;
-
-        end = 10000;
-
-    }
-
-
-    let percent =
-        ((coins - start) /
-        (end - start)) * 100;
-
-
-    if(percent > 100){
-
-        percent = 100;
-
-    }
-
-    if(percent < 0){
-
-        percent = 0;
-
-    }
-
-
-    progressFill.style.width =
-        percent + "%";
-
-    progressText.innerText =
-        Math.floor(percent) + "%";
-
+    progressFill.style.width = percent + "%";
+    progressText.innerText = Math.floor(percent) + "%";
 }
+
+
+/* ==================================================
+   ذخیره هنگام خروج / بستن تب
+================================================== */
+
+window.addEventListener("beforeunload", function(){
+    saveGame();
+});
+
+window.addEventListener("pagehide", function(){
+    saveGame();
+});
 
 
 /* ==================================================
@@ -1659,6 +1615,7 @@ let autoReward = 5;
 setInterval(function(){
 
     coins += autoReward;
+    totalCoinsEarned += autoReward;
 
     checkStage();
 
@@ -1726,6 +1683,8 @@ loadButton.onclick =
         updateRank();
 
         updateProgress();
+
+        renderAchievements();
 
         alert(
             "بازی بارگذاری شد."
@@ -1861,6 +1820,8 @@ importBtn.onclick =
 
                             updateProgress();
 
+                            renderAchievements();
+
                             alert(
                                 "ذخیره بازی با موفقیت وارد شد."
                             );
@@ -1958,9 +1919,9 @@ resetButton.onclick =
 
             coin300:false,
 
-            coin550:false,
+            coin1000:false,
 
-            coin1500:false,
+            coin5500:false,
 
             power10:false
 
@@ -2019,6 +1980,10 @@ document.getElementById("game")
 loadGame();
 
 checkStage();
+
+showAchievementAlerts = false;
+checkAchievements();
+showAchievementAlerts = true;
 
 updateUI();
 
