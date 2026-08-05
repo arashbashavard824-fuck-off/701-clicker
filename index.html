@@ -1,4 +1,10 @@
-<!DOCTYPE html>  <html lang="fa" dir="rtl">  <head>  <meta charset="UTF-8">  <meta name="viewport" content="width=device-width,initial-scale=1.0">  <title>انگشتش کن!</title>  <style>  
+<!DOCTYPE html>  
+<html lang="fa" dir="rtl">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width,initial-scale=1.0">  
+<title>انگشتش کن!</title>  
+<style>  
   
 *{  
     margin:0;  
@@ -117,7 +123,104 @@ button:active{
     background:#333;  
 }  
   
-/* استایل افکت پرتاب سکه */  
+/* --- استایل‌های کازینو (پاپ‌آپ و دکمه) --- */  
+#openCasinoBtn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff0055, #ff9800);
+    font-size: 32px;
+    border: 2px solid white;
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.8);
+    z-index: 900;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 15px rgba(255,152,0,0.8); }
+    50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255,152,0,1); }
+    100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,152,0,0.8); }
+}
+
+#casinoModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    display: none; /* در ابتدا مخفی است */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.casinoBoxModal {
+    background: linear-gradient(135deg, #2b0000, #4a0e0e);
+    border: 2px solid #ff4444;
+    border-radius: 20px;
+    padding: 25px 20px;
+    width: 360px;
+    max-width: 90%;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
+}
+
+#closeCasinoBtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: white;
+    width: auto;
+    margin: 0;
+    padding: 5px;
+    box-shadow: none;
+}
+#closeCasinoBtn:hover { background: rgba(255,255,255,0.1); }
+
+.casino-display {  
+    font-size: 36px;  
+    background: #111;  
+    padding: 10px;  
+    border-radius: 12px;  
+    margin: 15px 0;  
+    letter-spacing: 5px;  
+    border: 1px dashed #ff9800;  
+}  
+  
+.casino-input {  
+    width: 100%;  
+    padding: 12px;  
+    border-radius: 8px;  
+    border: 1px solid #555;  
+    background: #111;  
+    color: #fff;  
+    font-size: 16px;  
+    text-align: center;  
+    margin-bottom: 10px;  
+}  
+  
+.casino-btn {  
+    background: linear-gradient(45deg, #e65100, #ff9800);  
+    font-weight: bold;  
+    font-size: 18px;  
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+}  
+  
+/* افکت پرتاب سکه */  
 .flying-coin {  
     position: absolute;  
     pointer-events: none;  
@@ -130,29 +233,20 @@ button:active{
     user-select: none;  
 }  
 
-/* افکت ویژه کلیک طلایی */
-.flying-coin.golden {
-    font-size: 28px;
-    color: #fff700;
-    text-shadow: 0 0 15px #ffaa00, 0 0 25px #ffea00;
-    font-weight: 900;
-}
-  
-@keyframes floatUp {  
-    0% {  
-        opacity: 1;  
-        transform: translate(-50%, -50%) scale(0.8) rotate(0deg);  
-    }  
-    50% {  
-        transform: translate(calc(-50% + var(--dx)), calc(-50% - 60px)) scale(1.3) rotate(15deg);  
-    }  
-    100% {  
-        opacity: 0;  
-        transform: translate(calc(-50% + var(--dx)), calc(-50% - 120px)) scale(1) rotate(30deg);  
-    }  
+.flying-coin.golden {  
+    font-size: 28px;  
+    color: #fff700;  
+    text-shadow: 0 0 15px #ffaa00, 0 0 25px #ffea00;  
+    font-weight: 900;  
 }  
   
-/* استایل پیام خطا */  
+@keyframes floatUp {  
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8) rotate(0deg); }  
+    50% { transform: translate(calc(-50% + var(--dx)), calc(-50% - 60px)) scale(1.3) rotate(15deg); }  
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 120px)) scale(1) rotate(30deg); }  
+}  
+  
+/* پیام خطا */  
 #toastError {  
     position: fixed;  
     top: 20px;  
@@ -200,65 +294,87 @@ button:active{
     margin-top: 2px;  
 }  
   
-</style>  </head>  <body>  <div id="toastError">⚠️ سکه کافی نداری!</div>  <div id="game">  <h1>انگشتش کن!</h1>  
+</style>  
+</head>  
+<body>  
 
-<div class="info">  
-    <div>🪙 <span id="coins">0</span></div>  
-    <div>⭐سطح: <span id="stage">1</span></div>  
-</div>  
+<div id="toastError">⚠️ خطا!</div>  
 
-<div class="info">  
-    <div>⚡ <span id="energyText">100</span> / <span id="maxEnergyText">100</span></div>  
-    <div>💥قدرت کلیک: <span id="power">1</span></div>  
-</div>  
+<!-- دکمه شناور باز کردن کازینو -->
+<button id="openCasinoBtn">🎰</button>
 
-<div id="energyBar">  
-    <div id="energyFill"></div>  
-</div>  
-
-<img id="coin" src="img1.jpg" alt="Coin">  
-
-<div id="shop">  
-
-    <button id="upgradePower">  
-        ⬆ افزایش سکه هر کلیک  
-        <div class="upgrade-detail" id="powerDetail">قدرت: 1 ➔ 2</div>  
-        <span id="powerPrice">20</span> سکه  
-    </button>  
-
-    <button id="upgradeEnergy">  
-        🔋 افزایش ظرفیت انرژی  
-        <div class="upgrade-detail" id="energyDetail">ظرفیت: 100 ➔ 120</div>  
-        <span id="energyPrice">40</span> سکه  
-    </button>  
-
-    <button id="upgradeRegen">  
-        ⚡ افزایش سرعت بازیابی انرژی  
-        <div class="upgrade-detail" id="regenDetail">سرعت: 1/s ➔ 1.5/s</div>  
-        <span id="regenPrice">60</span> سکه  
-    </button>  
-
-    <!-- ارتقای کلیک طلایی -->
-    <button id="upgradeGoldenChance" style="background: #d4af37;">  
-        ✨ افزایش شانس کلیک طلایی  
-        <div class="upgrade-detail" id="goldenChanceDetail">شانس: 0% ➔ 1%</div>  
-        <span id="goldenChancePrice">50</span> سکه  
-    </button>  
-
-    <button id="upgradeGoldenMult" style="background: #b8860b;">  
-        👑 افزایش ضریب کلیک طلایی  
-        <div class="upgrade-detail" id="goldenMultDetail">ضریب: 2x ➔ 3x</div>  
-        <span id="goldenMultPrice">100</span> سکه  
-    </button>  
-
+<!-- مدال (پاپ‌آپ) کازینو -->
+<div id="casinoModal">
+    <div class="casinoBoxModal">
+        <button id="closeCasinoBtn">❌</button>
+        <h3 style="margin-bottom:10px">🎰 کازینو و ریسک</h3>  
+        <div class="casino-display" id="casinoSlots">🎰 🎰 🎰</div>  
+        <input type="number" id="betAmount" class="casino-input" placeholder="مبلغ شرط (۱,۰۰۰ تا ۱,۰۰۰,۰۰۰)" min="1000" max="1000000">  
+        <button id="spinCasinoBtn" class="casino-btn">🎲 چرخش گردونه!</button>  
+        <div id="casinoResult" style="font-size:14px; margin-top:15px; color:#ffd700; font-weight:bold; min-height:20px;"></div>  
+    </div>
 </div>
 
-</div>  <script>  
+<div id="game">  
+    <h1>انگشتش کن!</h1>  
+
+    <div class="info">  
+        <div>🪙 <span id="coins">0</span></div>  
+        <div>⭐سطح: <span id="stage">1</span></div>  
+    </div>  
+
+    <div class="info">  
+        <div>⚡ <span id="energyText">100</span> / <span id="maxEnergyText">100</span></div>  
+        <div>💥قدرت کلیک: <span id="power">1</span></div>  
+    </div>  
+
+    <div id="energyBar">  
+        <div id="energyFill"></div>  
+    </div>  
+
+    <img id="coin" src="img1.jpg" alt="Coin">  
+
+    <div id="shop">  
+
+        <button id="upgradePower">  
+            ⬆ افزایش سکه هر کلیک  
+            <div class="upgrade-detail" id="powerDetail">قدرت: 1 ➔ 2</div>  
+            <span id="powerPrice">20</span> سکه  
+        </button>  
+
+        <button id="upgradeEnergy">  
+            🔋 افزایش ظرفیت انرژی  
+            <div class="upgrade-detail" id="energyDetail">ظرفیت: 100 ➔ 120</div>  
+            <span id="energyPrice">40</span> سکه  
+        </button>  
+
+        <button id="upgradeRegen">  
+            ⚡ افزایش سرعت بازیابی انرژی  
+            <div class="upgrade-detail" id="regenDetail">سرعت: 1/s ➔ 1.5/s</div>  
+            <span id="regenPrice">60</span> سکه  
+        </button>  
+
+        <button id="upgradeGoldenChance" style="background: #d4af37;">  
+            ✨ افزایش شانس کلیک طلایی  
+            <div class="upgrade-detail" id="goldenChanceDetail">شانس: 0% ➔ 1%</div>  
+            <span id="goldenChancePrice">50</span> سکه  
+        </button>  
+
+        <button id="upgradeGoldenMult" style="background: #b8860b;">  
+            👑 افزایش ضریب کلیک طلایی  
+            <div class="upgrade-detail" id="goldenMultDetail">ضریب: 2x ➔ 3x</div>  
+            <span id="goldenMultPrice">100</span> سکه  
+        </button>  
+
+    </div>  
+
+</div>  
+
+<script>  
   
 /* ==================================================  
    متغیرهای اصلی  
 ================================================== */  
-  
 let coins = 0;  
 let stage = 1;  
 let power = 1;  
@@ -266,65 +382,36 @@ let energy = 100;
 let maxEnergy = 100;  
 let regen = 1;  
 
-// کلیک طلایی
-let goldenChance = 0; // درصد شانس (از 0)
-let goldenMult = 2; // ضریب کلیک طلایی (پایه 2 برابر)
+let goldenChance = 0;  
+let goldenMult = 2;  
   
 let powerPrice = 20;  
 let energyPrice = 40;  
 let regenPrice = 60;  
-let goldenChancePrice = 50;
-let goldenMultPrice = 100;
-  
-/* ==================================================  
-   سطح ارتقاها  
-================================================== */  
+let goldenChancePrice = 50;  
+let goldenMultPrice = 100;  
   
 let powerLevel = 1;  
 let energyLevel = 1;  
 let regenLevel = 1;  
-let goldenChanceLevel = 0;
-let goldenMultLevel = 1;
-  
-/* ==================================================  
-   آمار  
-================================================== */  
+let goldenChanceLevel = 0;  
+let goldenMultLevel = 1;  
   
 let totalClicks = 0;  
 let totalCoinsEarned = 0;  
 let gameStart = Date.now();  
-  
-/* ==================================================  
-   خرید چندتایی  
-================================================== */  
-  
 let buyAmount = 1;  
   
-/* ==================================================  
-   دستاوردها  
-================================================== */  
-  
 let achievements = {  
-    firstClick:false,  
-    coin50:false,  
-    coin300:false,  
-    coin1000:false,  
-    coin5500:false,  
-    power10:false  
+    firstClick:false, coin50:false, coin300:false, coin1000:false, coin5500:false, power10:false  
 };  
   
 let showAchievementAlerts = true;  
-  
-/* ==================================================  
-   رتبه  
-================================================== */  
-  
 let rank = "حروم لقمه";  
   
 /* ==================================================  
    عناصر HTML  
 ================================================== */  
-  
 const coin = document.getElementById("coin");  
 const coinsText = document.getElementById("coins");  
 const stageText = document.getElementById("stage");  
@@ -336,21 +423,50 @@ const powerText = document.getElementById("power");
 const powerPriceText = document.getElementById("powerPrice");  
 const energyPriceText = document.getElementById("energyPrice");  
 const regenPriceText = document.getElementById("regenPrice");  
-const goldenChancePriceText = document.getElementById("goldenChancePrice");
-const goldenMultPriceText = document.getElementById("goldenMultPrice");
+const goldenChancePriceText = document.getElementById("goldenChancePrice");  
+const goldenMultPriceText = document.getElementById("goldenMultPrice");  
   
 const powerDetail = document.getElementById("powerDetail");  
 const energyDetail = document.getElementById("energyDetail");  
 const regenDetail = document.getElementById("regenDetail");  
-const goldenChanceDetail = document.getElementById("goldenChanceDetail");
-const goldenMultDetail = document.getElementById("goldenMultDetail");
+const goldenChanceDetail = document.getElementById("goldenChanceDetail");  
+const goldenMultDetail = document.getElementById("goldenMultDetail");  
   
 const toastError = document.getElementById("toastError");  
-  
+
+// عناصر کازینو
+const casinoModal = document.getElementById("casinoModal");
+const openCasinoBtn = document.getElementById("openCasinoBtn");
+const closeCasinoBtn = document.getElementById("closeCasinoBtn");
+const betInput = document.getElementById("betAmount");
+const spinCasinoBtn = document.getElementById("spinCasinoBtn");
+const casinoSlots = document.getElementById("casinoSlots");
+const casinoResult = document.getElementById("casinoResult");
+let isSpinning = false;
+
 /* ==================================================  
-   محاسبه هزینه‌ها و مقادیر برای خرید چندتایی  
+   مدیریت پاپ‌آپ کازینو  
+================================================== */
+openCasinoBtn.onclick = () => {
+    casinoModal.style.display = 'flex';
+    // آپدیت سکه در صورت نیاز هنگام باز شدن
+    updateUI(); 
+};
+
+closeCasinoBtn.onclick = () => {
+    casinoModal.style.display = 'none';
+};
+
+// اگر بازیکن بیرون از پنل کلیک کرد، بسته بشه
+casinoModal.onclick = (e) => {
+    if (e.target === casinoModal) {
+        casinoModal.style.display = 'none';
+    }
+};
+
+/* ==================================================  
+   محاسبه هزینه‌ها  
 ================================================== */  
-  
 function calculateUpgradeStats(type) {  
     let cost = 0;  
     let tempPrice = (type === 'power') ? powerPrice : 
@@ -375,10 +491,10 @@ function calculateUpgradeStats(type) {
             tempVal += 0.5;  
             tempPrice = Math.floor(tempPrice * 2);  
         } else if (type === 'goldenChance') {  
-            tempVal += 1; // هر سطح +1% شانس  
+            tempVal += 1;  
             tempPrice = Math.floor(tempPrice * 1.9);  
         } else if (type === 'goldenMult') {  
-            tempVal += 1; // هر سطح +1x ضریب  
+            tempVal += 1;  
             tempPrice = Math.floor(tempPrice * 2.2);  
         }  
     }  
@@ -388,16 +504,13 @@ function calculateUpgradeStats(type) {
 /* ==================================================  
    آپدیت رابط کاربری  
 ================================================== */  
-  
 function updateUI(){  
-  
-    coinsText.innerText = coins;  
+    coinsText.innerText = Math.floor(coins);  
     stageText.innerText = stage;  
     energyText.innerText = Math.floor(energy);  
     maxEnergyText.innerText = maxEnergy;  
     powerText.innerText = power;  
   
-    // آپدیت قیمت‌ها و جزئیات ارتقا  
     const pStats = calculateUpgradeStats('power');  
     powerPriceText.innerText = pStats.totalCost;  
     powerDetail.innerText = `قدرت: ${power} ➔ ${pStats.nextVal}`;  
@@ -423,9 +536,8 @@ function updateUI(){
 }  
   
 /* ==================================================  
-   نمایش خطای سکه ناکافی  
+   نمایش خطای بالا صفحه  
 ================================================== */  
-  
 let errorTimeout;  
 function showError(msg) {  
     toastError.innerText = msg;  
@@ -439,7 +551,6 @@ function showError(msg) {
 /* ==================================================  
    تغییر عکس سکه  
 ================================================== */  
-  
 function checkStage(){  
     if(coins >= 15000){ stage = 6; coin.src = "nezam.jpg"; }  
     else if(coins >= 5500){ stage = 5; coin.src = "gh.jpg"; }  
@@ -450,9 +561,8 @@ function checkStage(){
 }  
   
 /* ==================================================  
-   صدای کلیک  
+   صداها  
 ================================================== */  
-  
 function playClick(isGolden = false){  
     try{  
         const ctx = new (window.AudioContext || window.webkitAudioContext)();  
@@ -466,13 +576,28 @@ function playClick(isGolden = false){
         osc.start();  
         gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (isGolden ? 0.2 : 0.08));  
         osc.stop(ctx.currentTime + (isGolden ? 0.2 : 0.08));  
-    }catch(e){ console.log("Audio error:",e); }  
+    }catch(e){}  
 }  
+
+function playCasinoSound(isWin = false){
+    try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = isWin ? "square" : "sawtooth";
+        osc.frequency.value = isWin ? 900 : 250;
+        gain.gain.value = 0.05;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+        osc.stop(ctx.currentTime + 0.3);
+    }catch(e){}
+}
   
 /* ==================================================  
    افکت پرت شدن سکه با کلیک  
 ================================================== */  
-  
 function spawnFlyingCoin(e, earnedCoins, isGolden) {  
     const coinElem = document.createElement("div");  
     coinElem.className = isGolden ? "flying-coin golden" : "flying-coin";  
@@ -481,14 +606,12 @@ function spawnFlyingCoin(e, earnedCoins, isGolden) {
     const rect = coin.getBoundingClientRect();  
     const gameRect = document.getElementById("game").getBoundingClientRect();  
   
-    // موقعیت کلیک نسبت به کادر بازی  
     let clickX = (e.clientX || (rect.left + rect.width / 2)) - gameRect.left;  
     let clickY = (e.clientY || (rect.top + rect.height / 2)) - gameRect.top;  
   
     coinElem.style.left = clickX + "px";  
     coinElem.style.top = clickY + "px";  
       
-    // انحراف تصادفی به چپ یا راست هنگام پرتاب  
     let randomDx = (Math.random() - 0.5) * 60;  
     coinElem.style.setProperty('--dx', `${randomDx}px`);  
   
@@ -500,9 +623,118 @@ function spawnFlyingCoin(e, earnedCoins, isGolden) {
 }  
   
 /* ==================================================  
+   منطق و مکانیزم کازینو 🎰 (با ایموجی‌های کلاسیک)
+================================================== */  
+spinCasinoBtn.onclick = function() {
+    if(isSpinning) return;
+
+    let bet = parseInt(betInput.value);
+
+    if (isNaN(bet)) {
+        showError("⚠️ لطفا مبلغ شرط را وارد کن!");
+        return;
+    }
+    if (bet < 1000) {
+        showError("⚠️ حداقل شرط ۱,۰۰۰ سکه‌ است!");
+        return;
+    }
+    if (bet > 1000000) {
+        showError("⚠️ حداکثر شرط ۱,۰۰۰,۰۰۰ سکه‌ است!");
+        return;
+    }
+    if (coins < bet) {
+        showError("⚠️ سکه کافی برای این شرط نداری!");
+        return;
+    }
+
+    coins -= bet;
+    updateUI();
+    isSpinning = true;
+    casinoResult.innerText = "در حال چرخیدن گردونه... 🎲";
+    casinoResult.style.color = "#fff";
+
+    const symbols = ["💀", "🍋", "🔔", "⭐", "💎", "7️⃣"];
+    let counter = 0;
+
+    let spinInterval = setInterval(() => {
+        let s1 = symbols[Math.floor(Math.random() * symbols.length)];
+        let s2 = symbols[Math.floor(Math.random() * symbols.length)];
+        let s3 = symbols[Math.floor(Math.random() * symbols.length)];
+        casinoSlots.innerText = `${s1} ${s2} ${s3}`;
+        playCasinoSound(false);
+        counter++;
+
+        if (counter >= 15) {
+            clearInterval(spinInterval);
+            calculateCasinoOutcome(bet);
+            isSpinning = false;
+        }
+    }, 80);
+};
+
+function calculateCasinoOutcome(bet) {
+    let roll = Math.random() * 100;
+    let multiplier = 0;
+    let slotText = "";
+    let message = "";
+    let resultColor = "";
+
+    if (roll < 35) {
+        multiplier = 0;
+        slotText = "💀 💀 💀";
+        message = "💥 پوچ شد! تمام شرطت پرید!";
+        resultColor = "#ff4444";
+    } else if (roll < 60) {
+        multiplier = 0.5;
+        slotText = "🍋 🍋 💀";
+        message = "📉 ضریب 0.5x - نصف شرطت برگشت.";
+        resultColor = "#ff9800";
+    } else if (roll < 75) {
+        multiplier = 1;
+        slotText = "🔔 🔔 🔔";
+        message = "⚖️ ضریب 1x - اصل پولت برگشت.";
+        resultColor = "#aaa";
+    } else if (roll < 90) {
+        multiplier = 1.5;
+        slotText = "⭐ ⭐ ⭐";
+        message = "✨ ضریب 1.5x - ۵۰٪ سود کردی!";
+        resultColor = "#4caf50";
+    } else if (roll < 98) {
+        multiplier = 2;
+        slotText = "💎 💎 💎";
+        message = "🔥 ضریب 2x - شرطت دو برابر شد!";
+        resultColor = "#00e5ff";
+    } else {
+        multiplier = 2.5;
+        slotText = "7️⃣ 7️⃣ 7️⃣";
+        message = "🎉 جک‌پات! ضریب 2.5x - برد فوق‌العاده!";
+        resultColor = "#ffd700";
+    }
+
+    casinoSlots.innerText = slotText;
+    let winCoins = Math.floor(bet * multiplier);
+    coins += winCoins;
+
+    if (winCoins > bet) {
+        totalCoinsEarned += (winCoins - bet);
+        playCasinoSound(true);
+    }
+
+    casinoResult.style.color = resultColor;
+    casinoResult.innerText = `${message} (${winCoins} سکه)`;
+
+    checkStage();
+    checkAchievements();
+    updateUI();
+    updateStats();
+    updateRank();
+    updateProgress();
+    saveGame();
+}
+
+/* ==================================================  
    پنل آمار  
 ================================================== */  
-  
 const stats = document.createElement("div");  
 stats.className = "panel";  
 stats.innerHTML = `  
@@ -519,14 +751,13 @@ const timePlayed = document.getElementById("timePlayed");
   
 function updateStats(){  
     clickCount.innerText = totalClicks;  
-    coinCount.innerText = totalCoinsEarned;  
+    coinCount.innerText = Math.floor(totalCoinsEarned);  
     timePlayed.innerText = Math.floor((Date.now() - gameStart) / 1000);  
 }  
   
 /* ==================================================  
    سطح ارتقاها  
 ================================================== */  
-  
 const levelBox = document.createElement("div");  
 levelBox.className = "panel levelBox";  
 levelBox.innerHTML = `  
@@ -556,7 +787,6 @@ function updateLevels(){
 /* ==================================================  
    دستاوردها  
 ================================================== */  
-  
 const achievementBox = document.createElement("div");  
 achievementBox.className = "panel achievementBox";  
 achievementBox.innerHTML = `  
@@ -606,13 +836,12 @@ function checkAchievements(){
 /* ==================================================  
    ذخیره / بارگذاری  
 ================================================== */  
-  
 function saveGame(){  
     const data = {  
         coins, stage, power, energy, maxEnergy, regen,  
-        goldenChance, goldenMult,
-        powerPrice, energyPrice, regenPrice, goldenChancePrice, goldenMultPrice,
-        powerLevel, energyLevel, regenLevel, goldenChanceLevel, goldenMultLevel,
+        goldenChance, goldenMult,  
+        powerPrice, energyPrice, regenPrice, goldenChancePrice, goldenMultPrice,  
+        powerLevel, energyLevel, regenLevel, goldenChanceLevel, goldenMultLevel,  
         totalClicks, totalCoinsEarned, gameStart, achievements  
     };  
     localStorage.setItem("CoinClickerSave", JSON.stringify(data));  
@@ -662,23 +891,21 @@ function loadGame(){
 /* ==================================================  
    کلیک اصلی روی سکه  
 ================================================== */  
-  
 coin.onclick = function(e){  
     if(energy < 1){  
         showError("⚡ انرژی تموم شده!");  
         return;  
     }  
 
-    // بررسی شانس کلیک طلایی
-    let isGolden = false;
-    if(goldenChance > 0) {
-        let roll = Math.random() * 100;
-        if(roll < goldenChance) {
-            isGolden = true;
-        }
-    }
+    let isGolden = false;  
+    if(goldenChance > 0) {  
+        let roll = Math.random() * 100;  
+        if(roll < goldenChance) {  
+            isGolden = true;  
+        }  
+    }  
   
-    let earnedCoins = isGolden ? (power * goldenMult) : power;
+    let earnedCoins = isGolden ? (power * goldenMult) : power;  
 
     playClick(isGolden);  
     spawnFlyingCoin(e, earnedCoins, isGolden);  
@@ -698,9 +925,8 @@ coin.onclick = function(e){
 };  
   
 /* ==================================================  
-   تابع خرید ارتقا با کنترل باگ سکه ناکافی  
+   خرید ارتقا  
 ================================================== */  
-  
 function buyUpgrade(type){  
     const reqStats = calculateUpgradeStats(type);  
       
@@ -751,10 +977,6 @@ function buyUpgrade(type){
     saveGame();  
 }  
   
-/* ==================================================  
-   اتصال دکمه های ارتقا  
-================================================== */  
-  
 document.getElementById("upgradePower").onclick = () => buyUpgrade("power");  
 document.getElementById("upgradeEnergy").onclick = () => buyUpgrade("energy");  
 document.getElementById("upgradeRegen").onclick = () => buyUpgrade("regen");  
@@ -764,7 +986,6 @@ document.getElementById("upgradeGoldenMult").onclick = () => buyUpgrade("goldenM
 /* ==================================================  
    شارژ انرژی  
 ================================================== */  
-  
 setInterval(function(){  
     if(energy < maxEnergy){  
         energy += regen / 10;  
@@ -776,7 +997,6 @@ setInterval(function(){
 /* ==================================================  
    پنل خرید چندتایی  
 ================================================== */  
-  
 const buyBox = document.createElement("div");  
 buyBox.className = "panel";  
 buyBox.innerHTML = `  
@@ -797,7 +1017,6 @@ document.getElementById("buy10").onclick = function(){ buyAmount = 10; buyAmount
 /* ==================================================  
    پاداش روزانه  
 ================================================== */  
-  
 const dailyBox = document.createElement("div");  
 dailyBox.className = "panel";  
 dailyBox.innerHTML = `  
@@ -831,7 +1050,6 @@ document.getElementById("dailyReward").onclick = function(){
 /* ==================================================  
    رتبه بازیکن  
 ================================================== */  
-  
 const rankBox = document.createElement("div");  
 rankBox.className = "panel rankBox";  
 rankBox.innerHTML = `  
@@ -890,7 +1108,6 @@ function updateProgress(){
 /* ==================================================  
    ذخیره خودکار و خروج  
 ================================================== */  
-  
 window.addEventListener("beforeunload", saveGame);  
 window.addEventListener("pagehide", saveGame);  
 setInterval(saveGame, 3000);  
@@ -898,7 +1115,6 @@ setInterval(saveGame, 3000);
 /* ==================================================  
    پاداش خودکار هر دقیقه  
 ================================================== */  
-  
 setInterval(function(){  
     coins += 5;  
     totalCoinsEarned += 5;  
@@ -913,7 +1129,6 @@ setInterval(function(){
 /* ==================================================  
    دکمه‌های ذخیره / بارگذاری / خروجی  
 ================================================== */  
-  
 const saveButton = document.createElement("button");  
 saveButton.innerText = "💾 ذخیره بازی";  
 saveButton.onclick = function(){ saveGame(); alert("بازی ذخیره شد."); };  
@@ -985,9 +1200,9 @@ resetButton.onclick = function(){
     if(!confirm("آیا مطمئن هستید؟ تمام پیشرفت بازی پاک می‌شود.")) return;  
     localStorage.removeItem("CoinClickerSave");  
     coins = 0; stage = 1; power = 1; energy = 100; maxEnergy = 100; regen = 1;  
-    goldenChance = 0; goldenMult = 2;
-    powerPrice = 20; energyPrice = 40; regenPrice = 60; goldenChancePrice = 50; goldenMultPrice = 100;
-    powerLevel = 1; energyLevel = 1; regenLevel = 1; goldenChanceLevel = 0; goldenMultLevel = 1;
+    goldenChance = 0; goldenMult = 2;  
+    powerPrice = 20; energyPrice = 40; regenPrice = 60; goldenChancePrice = 50; goldenMultPrice = 100;  
+    powerLevel = 1; energyLevel = 1; regenLevel = 1; goldenChanceLevel = 0; goldenMultLevel = 1;  
     totalClicks = 0; totalCoinsEarned = 0; gameStart = Date.now(); buyAmount = 1;  
     achievements = { firstClick:false, coin50:false, coin300:false, coin1000:false, coin5500:false, power10:false };  
     achievementList.innerHTML = "هنوز دستاوردی نگرفتی.";  
@@ -1004,7 +1219,6 @@ document.getElementById("game").appendChild(version);
 /* ==================================================  
    راه‌اندازی بازی  
 ================================================== */  
-  
 loadGame();  
 checkStage();  
 showAchievementAlerts = false;  
@@ -1017,4 +1231,6 @@ updateLevels();
 updateRank();  
 updateProgress();  
   
-</script>  </body>  </html>
+</script>  
+</body>  
+</html>
