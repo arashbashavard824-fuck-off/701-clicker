@@ -434,11 +434,11 @@ firebase.initializeApp(firebaseConfig);
         <div class="scrollArea">
             <div class="panel">
                 <h3>🐲 پاپت‌های جنگی</h3>
-                <div style="font-size:20px; margin:6px 0;">🐲 <span id="warTicketText">10</span> / <span id="maxWarTicketText">10</span></div>
+                <div style="font-size:20px; margin:6px 0;">🐲 <span id="warTicketText">5</span> / <span id="maxWarTicketText">5</span></div>
                 <div style="font-size:11px; color:#aaa; margin-bottom:6px;">زمان شارژ: <span id="libRegenTimeText">10</span> دقیقه</div>
-                <button id="buyWarTicket" class="actionBtn" style="margin-bottom:5px;">🐲 خرید ۱ پاپت (<span id="warTicketPriceText">15,000</span> سکه)</button>
+                <button id="buyWarTicket" class="actionBtn" style="margin-bottom:5px;">🐲 خرید ۱ پاپت (<span id="warTicketPriceText">50000</span> سکه)</button>
                 <button id="upgradeMaxTickets" class="actionBtn" style="background:#17a2b8; margin-bottom:5px;">🏺 افزایش سقف پاپت (<span id="maxTicketPrice">25000</span> سکه)</button>
-                <button id="upgradeTicketSpeed" class="actionBtn" style="background:#6c757d;">📖 شارز سریع تر پاپت(<span id="ticketSpeedPrice">40000</span> سکه)</button>
+                <button id="upgradeTicketSpeed" class="actionBtn" style="background:#6c757d;">📖 شارز سریع تر پاپت(<span id="ticketSpeedPrice">100000</span> سکه)</button>
             </div>
 
             <div class="panel">
@@ -509,14 +509,14 @@ let firebaseReady = false, marketRef = null, playerRef = null, playerId = null;
 let playerName = "بازیکن ناشناس", marketItemsCache = {};
 
 
-let warTickets = 10;
-let maxWarTickets = 10;
+let warTickets = 5;
+let maxWarTickets = 5;
 let warTicketInterval = 10 * 60 * 1000;
-const warTicketPrice = 15000;
+const warTicketPrice = 50000;
 let lastWarTicketTime = Date.now();
 
 let maxTicketPrice = 25000;
-let ticketSpeedPrice = 40000;
+let ticketSpeedPrice = 100000;
 
 const heroes = [
     { id: 1, name: "ضیا نظام گیسو کمندیان", power: 50, price: 1500 },
