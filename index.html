@@ -797,7 +797,7 @@ document.getElementById("upgradeMaxTickets").onclick = () => {
 
 document.getElementById("upgradeTicketSpeed").onclick = () => {
     if(warTicketInterval <= 2 * 60 * 1000){
-        showError("⚠️ سرعت شارژ به حداکثر رسیده است!");
+        showError("⚠️ سرعت شارژ پاپت به حداکثر رسیده است!");
         return;
     }
     if(coins >= ticketSpeedPrice){
@@ -805,7 +805,7 @@ document.getElementById("upgradeTicketSpeed").onclick = () => {
         warTicketInterval = Math.max(2 * 60 * 1000, warTicketInterval - (1.5 * 60 * 1000));
         ticketSpeedPrice = Math.floor(ticketSpeedPrice * 2.5);
         updateUI(); saveGame();
-        alert("📖 زمان بازیابی نیزه‌ها کاهش یافت!");
+        alert("📖 زمان بازیابی پاپت ها کاهش یافت!");
     } else { 
         showError("⚠️ سکه کافی نداری!"); 
     }
