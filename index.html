@@ -295,7 +295,38 @@ button.actionBtn:disabled{ background:#555; box-shadow:none; cursor:not-allowed;
 
 #progressBar{ height:10px; background:#555; border-radius:10px; overflow:hidden; margin-top:4px; }
 #progressFill{ height:100%; width:0%; background:#4caf50; transition:.3s; }
+
+/* ================= بازار آنلاین ================= */
+.marketTop{display:flex;gap:6px;margin-bottom:10px}
+.marketTop input{flex:1;min-width:0;padding:10px;border-radius:10px;border:1px solid #00eaff;background:#111;color:#fff;text-align:center;font-weight:900;outline:none;box-shadow:0 0 8px rgba(0,234,255,.2)}
+.marketStatus{font-size:11px;color:#aaa;margin:6px 0 10px}
+.marketCard{background:rgba(10,15,25,.95);border:1px solid rgba(0,234,255,.35);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 0 10px rgba(0,234,255,.08)}
+.marketCard .seller{color:#ffb300;font-size:11px;margin-bottom:5px}
+.marketCard .marketPrice{color:#ffd700;font-size:14px;margin:7px 0}
+.marketEmpty{color:#888;padding:20px 8px;font-size:12px}
+.marketBtn{background:linear-gradient(180deg,#00a8ff,#0066ff)!important}
+.marketMine{background:linear-gradient(180deg,#ff9800,#e65100)!important}
+
 </style>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBlrb9xE--CvlqCINxJIy75u6n3f6_eaH4",
+  authDomain: "clicker-5eaed.firebaseapp.com",
+  databaseURL: "https://clicker-5eaed-default-rtdb.firebaseio.com",
+  projectId: "clicker-5eaed",
+  storageBucket: "clicker-5eaed.firebasestorage.app",
+  messagingSenderId: "461109787796",
+  appId: "1:461109787796:web:6ec86e263712911b4a8881"
+};
+
+firebase.initializeApp(firebaseConfig);
+</script>
+
 </head>
 
 <body>
@@ -322,6 +353,7 @@ button.actionBtn:disabled{ background:#555; box-shadow:none; cursor:not-allowed;
         <button class="menuTab" onclick="switchPage('heroesPage')">🦸 قهرمان</button>
         <button class="menuTab" onclick="switchPage('huntPage')">⚔️ شکارگاه</button>
         <button class="menuTab" onclick="switchPage('collectionPage')">🎨 کلکسیون</button>
+        <button class="menuTab" onclick="switchPage('marketPage')">🏪 بازار</button>
     </div>
 
     <!-- ================= صفحه اصلی ================= -->
@@ -423,9 +455,31 @@ button.actionBtn:disabled{ background:#555; box-shadow:none; cursor:not-allowed;
         <div class="scrollArea">
             <div class="panel">
                 <h3>🎨 کلکسیون کارت من (<span id="nftCount">0</span>)</h3>
-                <p style="font-size:13px; color:#aaa;">کارت‌های شکار شده شما اینجا ذخیره می‌شوند. می‌توانید آن‌ها را بفروشید(به زودی فروش انلاین!)</p>
+                <p style="font-size:13px; color:#aaa;">کارت‌های شکار شده شما اینجا ذخیره می‌شوند. می‌توانید آن‌ها را در بازار آنلاین برای فروش بگذارید.</p>
             </div>
             <div id="collectionList"></div>
+        </div>
+    </div>
+
+
+    <div id="marketPage" class="pageContent">
+        <div class="scrollArea">
+            <div class="panel">
+                <h3>🏪 بازار آنلاین</h3>
+                <div class="marketTop">
+                    <input id="playerNameInput" maxlength="20" placeholder="نام بازیکن">
+                    <button id="savePlayerNameBtn" class="actionBtn" style="width:115px;margin-top:0;background:linear-gradient(180deg,#8e24aa,#5e35b1);">💾 ثبت نام</button>
+                </div>
+                <div id="marketStatus" class="marketStatus">در حال اتصال به بازار...</div>
+            </div>
+            <div class="panel">
+                <h3>🛒 کارت‌های گذاشته شده در بازار</h3>
+                <div id="marketList"><div class="marketEmpty">در حال دریافت کارت‌ها...</div></div>
+            </div>
+            <div class="panel">
+                <h3>🏷️ کارت‌های من در بازار</h3>
+                <div id="myMarketList"><div class="marketEmpty">هنوز کارتی برای فروش نگذاشته‌ای.</div></div>
+            </div>
         </div>
     </div>
 
@@ -448,6 +502,12 @@ let buyAmount = 1;
 let totalClicks = 0, totalCoinsEarned = 0;
 let ownedHeroes = [];
 let myNFTs = [];
+
+// ================= بازار آنلاین =================
+
+let firebaseReady = false, marketRef = null, playerRef = null, playerId = null;
+let playerName = "بازیکن ناشناس", marketItemsCache = {};
+
 
 let warTickets = 10;
 let maxWarTickets = 10;
@@ -474,21 +534,22 @@ const nftDatabase = {
     "grey": [
         { name: "دِ بَد پزشکیان", price: 1200, colorClass: "lvl-1", typeName: "پدرامی", img: "pzshkian.jpg" },
         { name: "اشپزطبرقی", price: 1800, colorClass: "lvl-1", typeName: "غیاثی", img: "cestab.jpg" },
-        { name: "سرداری پروازی زاده", price: 2500, colorClass: "lvl-1", typeName: "کاملی", img: "sardariparvaz.jpg" }
+        { name: "سرداری پروازی زاده", price: 2500, colorClass: "lvl-1", typeName: "کاملی", img: "sardariparvaz.jpg" },
+        { name: "می خانه انگلیسی ها", price: 25000, colorClass: "lvl-1", typeName: "قانعی", img: "ghanemey.jpg" }
     ],
     "green": [
         { name: "گی دونی", price: 5000, colorClass: "lvl-2", typeName: "بشایی", img: "gaydoni.png" },
         { name: "ارتشبد حاج نظام", price: 7500, colorClass: "lvl-2", typeName: "معینی (بی پور)", img: "nezamarteshi.jpg" },
-        { name: "صفار طِلایی", price: 10000, colorClass: "lvl-2", typeName: "طیاره ای", img: "gsfr.png" }
+        { name: "صفار طِلایی", price: 10000, colorClass: "lvl-2", typeName: "طیاره ای", img: "gsfr.png" },
+        { name: "قانع اِیر لاین", price: 60000, colorClass: "lvl-2", typeName: "پدرام صفاری", img: "ghaneair.jpg" }
     ],
     "blue": [
         { name: "هَل هُوَ جُندی؟", price: 18000, colorClass: "lvl-3", typeName: "نظام الحسینی", img: "etiadpzshkian.png" },
-        { name: "می خانه انگلیسی ها", price: 25000, colorClass: "lvl-3", typeName: "قانعی", img: "ghanemey.jpg" },
         { name: "موزه داری نوین", price: 35000, colorClass: "lvl-3", typeName: "شیخ نَیاءیی", img: "dehghanmozeh.jpg" },
         { name: "مخترع مناطق کتک خورده", price: 45000, colorClass: "lvl-3", typeName: "پدرامی", img: "basiratianbargh.jpg" }
     ],
     "purple": [
-        { name: "قانع اِیر لاین", price: 60000, colorClass: "lvl-4", typeName: "پدرام صفاری", img: "ghaneair.jpg" },
+        { name: "", price: 60000, colorClass: "lvl-4", typeName: "پدرام صفاری", img: "" },
         { name: "", price: 85000, colorClass: "lvl-4", typeName: "بابا طاهره ایبد", img: "" },
         { name: "", price: 110000, colorClass: "lvl-4", typeName: "ضیا نظامی", img: "" }
     ],
@@ -568,6 +629,10 @@ function switchPage(pageId){
     if(pageId === 'heroesPage') tabs[1].classList.add("active");
     if(pageId === 'huntPage') tabs[2].classList.add("active");
     if(pageId === 'collectionPage') { tabs[3].classList.add("active"); renderCollection(); }
+    if(pageId === 'marketPage') {
+    tabs[4].classList.add("active");
+    renderMarket();
+}
 }
 
 /* ==================================================
@@ -638,6 +703,7 @@ coin.onclick = function(e){
     updateUI();
     updateStats();
     saveGame();
+    renderMarket();
 };
 
 function spawnFlyingCoin(e, earnedCoins, isGolden) {  
@@ -905,18 +971,36 @@ function renderCollection(){
     });
 }
 
-window.sellNFT = function(instanceId){
+window.sellNFT = async function(instanceId){
     const index = myNFTs.findIndex(n => n.instanceId === instanceId);
-    if(index !== -1){
-        const sold = myNFTs[index];
-        coins += sold.price;
-        totalCoinsEarned += sold.price;
+    if(index === -1) return;
+    if(!firebaseReady || !playerId){
+        showError("⚠️ بازار آنلاین هنوز متصل نشده است!");
+        return;
+    }
+
+    const sold = myNFTs[index];
+    const listing = {
+        sellerId: playerId,
+        sellerName: playerName || "بازیکن ناشناس",
+        name: sold.name || "کارت بدون نام",
+        price: Number(sold.price) || 0,
+        colorClass: sold.colorClass || "lvl-1",
+        typeName: sold.typeName || "",
+        img: sold.img || "",
+        originalInstanceId: String(sold.instanceId),
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    try{
+        await marketRef.push(listing);
         myNFTs.splice(index, 1);
-        
-        updateUI();
-        renderCollection();
-        saveGame();
+        updateUI(); renderCollection(); saveGame();
         playSound(1000, 0.08);
+        showError("✅ کارت با موفقیت وارد بازار شد!");
+    }catch(err){
+        console.error(err);
+        showError("❌ قرار دادن کارت در بازار ناموفق بود.");
     }
 };
 
@@ -1047,6 +1131,205 @@ document.getElementById("spinCasinoBtn").onclick = () => {
     }, 80);
 };
 
+
+/* ==================================================
+   بازار آنلاین
+   ================================================== */
+function initFirebaseMarket(){
+    try{
+        if(firebaseConfig.apiKey === "YOUR_API_KEY"){
+            document.getElementById("marketStatus").innerText =
+                "⚠️";
+            return;
+        }
+        if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        firebase.auth().signInAnonymously().then(result => {
+            playerId = result.user.uid;
+            firebaseReady = true;
+            marketRef = firebase.database().ref("market");
+            playerRef = firebase.database().ref("players/" + playerId);
+
+            playerRef.child("name").once("value").then(snap => {
+                playerName = snap.val() || "بازیکن " + playerId.slice(0,6);
+                document.getElementById("playerNameInput").value = playerName;
+                updateMarketStatus();
+            });
+
+            marketRef.on("value", snap => {
+                marketItemsCache = snap.val() || {};
+                renderMarket();
+            });
+            updateMarketStatus();
+            listenForPendingCoins();
+        }).catch(err => {
+            console.error(err);
+            document.getElementById("marketStatus").innerText = "❌ اتصال به بازار برقرار نشد.";
+        });
+    }catch(err){
+        console.error(err);
+        document.getElementById("marketStatus").innerText = "❌ تنظیمات Firebase مشکل دارد.";
+    }
+}
+
+function updateMarketStatus(){
+    const el = document.getElementById("marketStatus");
+    if(firebaseReady && el){
+        el.innerText = "🟢 آنلاین | نام شما: " + (playerName || "بازیکن ناشناس");
+        el.style.color = "#00ff9d";
+    }
+}
+
+document.getElementById("savePlayerNameBtn").onclick = async () => {
+    if(!firebaseReady || !playerRef){
+        showError("⚠️ ابتدا اتصال بازار را برقرار کنید.");
+        return;
+    }
+    const input = document.getElementById("playerNameInput");
+    const newName = (input.value || "").trim().replace(/[<>]/g, "");
+    if(newName.length < 2){
+        showError("⚠️ نام باید حداقل ۲ حرف باشد.");
+        return;
+    }
+    playerName = newName.slice(0,20);
+    try{
+        await playerRef.update({name: playerName});
+        updateMarketStatus();
+        showError("✅ نام بازیکن ثبت شد!");
+    }catch(err){
+        console.error(err);
+        showError("❌ ذخیره نام انجام نشد.");
+    }
+};
+
+function marketCardHTML(item, id, isMine){
+    const imgHtml = item.img ? `<img src="${item.img}" class="nftImg" alt="کارت">` : "";
+    if(isMine){
+        return `
+            <div class="marketCard ${item.colorClass || "lvl-1"}">
+                <div style="font-size:15px;font-weight:900;">${item.name}</div>
+                ${imgHtml}
+                <div style="font-size:11px;color:#aaa;">نوع: ${item.typeName || "-"}</div>
+                <div class="marketPrice">🏷️ قیمت فروش: ${Number(item.price).toLocaleString()} سکه</div>
+                <div class="seller">👤 فروشنده: ${item.sellerName || "ناشناس"}</div>
+                <button class="actionBtn marketMine" onclick="cancelMarketListing('${id}')">❌ برداشتن کارت از بازار</button>
+            </div>`;
+    }
+    return `
+        <div class="marketCard ${item.colorClass || "lvl-1"}">
+            <div style="font-size:15px;font-weight:900;">${item.name}</div>
+            ${imgHtml}
+            <div style="font-size:11px;color:#aaa;">نوع: ${item.typeName || "-"}</div>
+            <div class="marketPrice">💰 قیمت: ${Number(item.price).toLocaleString()} سکه</div>
+            <div class="seller">👤 فروشنده: ${item.sellerName || "بازیکن ناشناس"}</div>
+            <button class="actionBtn marketBtn" onclick="buyMarketCard('${id}')">🛒 خرید کارت</button>
+        </div>`;
+}
+
+function renderMarket(){
+    const list = document.getElementById("marketList");
+    const mine = document.getElementById("myMarketList");
+    if(!list || !mine) return;
+
+    const entries = Object.entries(marketItemsCache || {});
+    const others = entries.filter(([id,item]) => item && item.sellerId !== playerId);
+    const mineEntries = entries.filter(([id,item]) => item && item.sellerId === playerId);
+
+    list.innerHTML = others.length
+        ? others.map(([id,item]) => marketCardHTML(item,id,false)).join("")
+        : `<div class="marketEmpty">🏪 فعلاً کارت بازیکنان دیگر در بازار نیست.</div>`;
+
+    mine.innerHTML = mineEntries.length
+        ? mineEntries.map(([id,item]) => marketCardHTML(item,id,true)).join("")
+        : `<div class="marketEmpty">هنوز کارتی برای فروش نگذاشته‌ای.</div>`;
+}
+
+window.cancelMarketListing = async function(id){
+    if(!firebaseReady || !marketRef) return;
+    const item = marketItemsCache[id];
+    if(!item || item.sellerId !== playerId) return;
+
+    try{
+        await marketRef.child(id).remove();
+        myNFTs.push({
+            name:item.name, price:Number(item.price)||0,
+            colorClass:item.colorClass||"lvl-1", typeName:item.typeName||"",
+            img:item.img||"", instanceId:item.originalInstanceId || (Date.now()+Math.random())
+        });
+        saveGame(); updateUI(); renderCollection(); renderMarket();
+        showError("✅ کارت از بازار برداشته شد.");
+    }catch(err){
+        console.error(err);
+        showError("❌ برداشتن کارت ناموفق بود.");
+    }
+};
+
+window.buyMarketCard = async function(id){
+    if(!firebaseReady || !marketRef || !playerId){
+        showError("⚠️ بازار آنلاین متصل نیست.");
+        return;
+    }
+
+    const itemRef = marketRef.child(id);
+    try{
+        const result = await itemRef.transaction(current => {
+if(current === null) return;
+
+if(current.sellerId === playerId){
+    return;
+}
+
+if(coins < Number(current.price)){
+    return;
+}
+
+return {
+    ...current,
+    sold:true,
+    buyerId:playerId
+};
+        });
+
+        if(!result.committed){
+            showError("⚠️ کارت قبلاً خریداری شده یا سکه کافی نداری.");
+            return;
+        }
+
+        const sold = result.snapshot.val();
+        const price = Number(sold.price) || 0;
+
+        coins -= price;
+        myNFTs.push({
+            name:sold.name, price:price,
+            colorClass:sold.colorClass||"lvl-1", typeName:sold.typeName||"",
+            img:sold.img||"", instanceId:Date.now()+Math.random()
+        });
+
+        const sellerRef = firebase.database().ref("players/" + sold.sellerId + "/pendingCoins");
+        await sellerRef.transaction(v => (Number(v)||0) + price);
+
+        saveGame(); updateUI(); renderCollection(); renderMarket();
+        playSound(1200,0.08);
+        alert(`🎉 خرید موفق!\nکارت «${sold.name}» به کلکسیون شما اضافه شد.\n💰 مبلغ: ${price.toLocaleString()} سکه`);
+    }catch(err){
+        console.error(err);
+        showError("❌ خرید کارت انجام نشد.");
+    }
+};
+
+function listenForPendingCoins(){
+    if(!playerRef) return;
+    playerRef.child("pendingCoins").on("value", async snap => {
+        const amount = Number(snap.val()) || 0;
+        if(amount <= 0) return;
+        coins += amount;
+        totalCoinsEarned += amount;
+        await playerRef.child("pendingCoins").set(0);
+        updateUI(); saveGame();
+        showError(`💰 ${amount.toLocaleString()} سکه از فروش کارت دریافت کردی!`);
+    });
+}
+
 /* ==================================================
    ذخیره و بارگذاری
 ================================================== */
@@ -1104,6 +1387,7 @@ renderMonsters();
 updateWarTickets();
 updateUI();
 updateStats();
+initFirebaseMarket();
 </script>
 </body>
 </html>
